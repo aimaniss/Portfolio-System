@@ -38,7 +38,9 @@ yarn-error.log
 /.pi
 /.mcp.json
 /AGENTS.md
-/CLAUDE.md
 /boost.json
 /opencode.json
 /opencode.jsonc
+
+# Handoff archive (duplicate of the _handoff folder)
+/_handoff/handoff.zip
