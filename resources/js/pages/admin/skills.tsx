@@ -18,6 +18,32 @@ import type { Skill, SkillCategory } from '@/types/portfolio';
 const smallInput = cn(macInput, 'py-1.5 text-[13px]');
 const opts = { preserveScroll: true };
 
+/** Optional 0-100 proficiency; blank hides the bar on the site. */
+function LevelInput({
+    value,
+    onChange,
+}: {
+    value: string;
+    onChange: (value: string) => void;
+}) {
+    return (
+        <label className="flex shrink-0 items-center gap-1 text-[13px] text-mac-muted">
+            <input
+                type="number"
+                min={0}
+                max={100}
+                step={5}
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+                placeholder="lvl"
+                aria-label="Level (0-100)"
+                className={cn(smallInput, 'w-16 px-2')}
+            />
+            %
+        </label>
+    );
+}
+
 function SkillChip({
     skill,
     categories,
@@ -28,6 +54,7 @@ function SkillChip({
     const [editing, setEditing] = useState(false);
     const form = useForm({
         name: skill.name,
+        level: skill.level === null ? '' : String(skill.level),
         skill_category_id: skill.skill_category_id,
     });
 
@@ -56,6 +83,10 @@ function SkillChip({
                     value={form.data.name}
                     onChange={(e) => form.setData('name', e.target.value)}
                     className={cn(smallInput, 'w-36 flex-1 sm:flex-none')}
+                />
+                <LevelInput
+                    value={form.data.level}
+                    onChange={(v) => form.setData('level', v)}
                 />
                 <select
                     value={form.data.skill_category_id}
@@ -86,7 +117,7 @@ function SkillChip({
                 >
                     esc
                 </button>
-                <FieldError message={form.errors.name} />
+                <FieldError message={form.errors.name ?? form.errors.level} />
             </form>
         );
     }
@@ -100,6 +131,11 @@ function SkillChip({
                 className="px-2.5 py-1 text-mac-text hover:text-mac-bright"
             >
                 {skill.name}
+                {skill.level !== null && (
+                    <span className="ml-1.5 text-mac-green">
+                        {skill.level}%
+                    </span>
+                )}
             </button>
             <button
                 type="button"
@@ -122,7 +158,11 @@ function CategoryPanel({
 }) {
     const [renaming, setRenaming] = useState(false);
     const rename = useForm({ name: category.name });
-    const add = useForm({ name: '', skill_category_id: category.id });
+    const add = useForm({
+        name: '',
+        level: '',
+        skill_category_id: category.id,
+    });
 
     const saveName = (e: FormEvent) => {
         e.preventDefault();
@@ -136,7 +176,7 @@ function CategoryPanel({
         e.preventDefault();
         add.post('/admin/skills', {
             ...opts,
-            onSuccess: () => add.reset('name'),
+            onSuccess: () => add.reset('name', 'level'),
         });
     };
 
@@ -231,7 +271,11 @@ function CategoryPanel({
                         value={add.data.name}
                         onChange={(e) => add.setData('name', e.target.value)}
                         placeholder={`touch ${category.name}/…`}
-                        className={cn(smallInput, 'flex-1')}
+                        className={cn(smallInput, 'min-w-0 flex-1')}
+                    />
+                    <LevelInput
+                        value={add.data.level}
+                        onChange={(v) => add.setData('level', v)}
                     />
                     <button
                         type="submit"
@@ -244,7 +288,7 @@ function CategoryPanel({
                         + add
                     </button>
                 </form>
-                <FieldError message={add.errors.name} />
+                <FieldError message={add.errors.name ?? add.errors.level} />
             </div>
         </Panel>
     );
@@ -288,7 +332,8 @@ export default function Skills({
             </form>
 
             <div className="text-xs text-mac-muted">
-                # click a skill to rename or move it · × deletes it
+                # click a skill to rename, move or set its level (0-100%) · ×
+                deletes it
             </div>
 
             {categories.length === 0 ? (
