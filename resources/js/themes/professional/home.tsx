@@ -1,5 +1,17 @@
 import { Link } from '@inertiajs/react';
-import { Download, Github, Linkedin, MapPin } from 'lucide-react';
+import {
+    Code,
+    Container,
+    Database,
+    Download,
+    Github,
+    Layers,
+    Linkedin,
+    MapPin,
+    Monitor,
+    Server,
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import {
     duration,
     jobProjectsUrl,
@@ -10,7 +22,6 @@ import { cn } from '@/lib/utils';
 import type { HomeProps } from '@/types/portfolio';
 import {
     Empty,
-    ProChip,
     ProContact,
     ProProjectCard,
     ProShell,
@@ -47,6 +58,43 @@ function heroFacts(
 
     return facts;
 }
+
+const CATEGORY_ICONS: [RegExp, LucideIcon][] = [
+    [/lang/i, Code],
+    [/front|ui|web|mobile/i, Monitor],
+    [/back|api|server/i, Server],
+    [/data|db|sql/i, Database],
+    [/devops|cloud|infra|ops/i, Container],
+];
+
+function categoryIcon(name: string): LucideIcon {
+    return CATEGORY_ICONS.find(([re]) => re.test(name))?.[1] ?? Layers;
+}
+
+/** Chip style per tier: expert solid, advanced tinted, the rest outlined. */
+function skillTone(level: number | null): { chip: string; dot: string } {
+    if (level === 4) {
+        return { chip: 'bg-pro-accent text-white', dot: 'bg-pro-accent' };
+    }
+
+    if (level === 3) {
+        return {
+            chip: 'bg-pro-accent-soft text-pro-accent',
+            dot: 'bg-pro-accent-soft ring-1 ring-pro-accent/30',
+        };
+    }
+
+    return {
+        chip: 'border border-pro-line bg-pro-surface text-pro-soft',
+        dot: 'border border-pro-muted/50 bg-pro-surface',
+    };
+}
+
+const LEGEND: [number | null, string][] = [
+    [4, 'Expert'],
+    [3, 'Advanced'],
+    [2, 'Intermediate / beginner'],
+];
 
 function initials(name: string): string {
     return name
@@ -163,65 +211,85 @@ export default function ProHome({
                 </div>
             </section>
 
-            <Section id="skills" eyebrow="Toolkit" title="Skills">
+            <Section
+                id="skills"
+                eyebrow="Toolkit"
+                title="Skills"
+                aside={
+                    categories.length > 0 && (
+                        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-pro-muted">
+                            {LEGEND.map(([level, label]) => (
+                                <span
+                                    key={label}
+                                    className="inline-flex items-center gap-1.5"
+                                >
+                                    <span
+                                        className={cn(
+                                            'size-2.5 rounded-full',
+                                            skillTone(level).dot,
+                                        )}
+                                    />
+                                    {label}
+                                </span>
+                            ))}
+                        </div>
+                    )
+                }
+            >
                 {categories.length === 0 ? (
                     <Empty>Skills will appear here soon.</Empty>
                 ) : (
-                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    <div className="divide-y divide-pro-line overflow-hidden rounded-2xl border border-pro-line bg-pro-surface">
                         {categories.map((cat) => {
-                            const rated = cat.skills.filter(
-                                (s) => s.level !== null,
-                            );
-                            const plain = cat.skills.filter(
-                                (s) => s.level === null,
+                            const Icon = categoryIcon(cat.name);
+                            const skills = [...cat.skills].sort(
+                                (a, b) => (b.level ?? 0) - (a.level ?? 0),
                             );
 
                             return (
                                 <div
                                     key={cat.id}
-                                    className="flex flex-col gap-4 rounded-2xl border border-pro-line bg-pro-surface p-5 md:p-6"
+                                    className="grid gap-4 px-5 py-5 md:grid-cols-[220px_minmax(0,1fr)] md:items-center md:gap-8 md:px-7"
                                 >
-                                    <div className="text-sm font-semibold capitalize">
-                                        {cat.name}
-                                    </div>
-                                    {cat.skills.length === 0 && (
-                                        <span className="text-sm text-pro-muted">
-                                            —
+                                    <div className="flex items-center gap-3">
+                                        <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-pro-accent-soft text-pro-accent">
+                                            <Icon className="size-[18px]" />
                                         </span>
-                                    )}
-                                    {rated.length > 0 && (
-                                        <ul className="flex flex-col divide-y divide-pro-line/70">
-                                            {rated.map((s) => (
+                                        <span className="font-semibold capitalize">
+                                            {cat.name}
+                                        </span>
+                                        <span className="text-sm text-pro-muted">
+                                            {cat.skills.length}
+                                        </span>
+                                    </div>
+                                    <ul className="flex flex-wrap gap-2">
+                                        {skills.length === 0 && (
+                                            <li className="text-sm text-pro-muted">
+                                                —
+                                            </li>
+                                        )}
+                                        {skills.map((s) => {
+                                            const level = levelLabel(s.level);
+
+                                            return (
                                                 <li
                                                     key={s.id}
-                                                    className="flex items-center justify-between gap-3 py-2 text-[15px] first:pt-0 last:pb-0"
+                                                    title={level ?? undefined}
+                                                    className={cn(
+                                                        'rounded-full px-3.5 py-1.5 text-sm',
+                                                        skillTone(s.level).chip,
+                                                    )}
                                                 >
-                                                    <span className="text-pro-ink">
-                                                        {s.name}
-                                                    </span>
-                                                    <span
-                                                        className={cn(
-                                                            'rounded-full px-2.5 py-0.5 text-xs font-medium',
-                                                            s.level === 4
-                                                                ? 'bg-pro-accent-soft text-pro-accent'
-                                                                : 'bg-pro-bg text-pro-muted',
-                                                        )}
-                                                    >
-                                                        {levelLabel(s.level)}
-                                                    </span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    )}
-                                    {plain.length > 0 && (
-                                        <div className="flex flex-wrap gap-2">
-                                            {plain.map((s) => (
-                                                <ProChip key={s.id}>
                                                     {s.name}
-                                                </ProChip>
-                                            ))}
-                                        </div>
-                                    )}
+                                                    {level && (
+                                                        <span className="sr-only">
+                                                            , {level}
+                                                        </span>
+                                                    )}
+                                                </li>
+                                            );
+                                        })}
+                                    </ul>
                                 </div>
                             );
                         })}

@@ -168,27 +168,6 @@ export function Section({
     );
 }
 
-export function ProChip({
-    children,
-    active = false,
-}: {
-    children: ReactNode;
-    active?: boolean;
-}) {
-    return (
-        <span
-            className={cn(
-                'rounded-full border px-3 py-1 text-[13px]',
-                active
-                    ? 'border-pro-accent bg-pro-accent text-white'
-                    : 'border-pro-line bg-pro-surface text-pro-soft',
-            )}
-        >
-            {children}
-        </span>
-    );
-}
-
 export function Empty({ children }: { children: ReactNode }) {
     return (
         <div className="rounded-2xl border border-dashed border-pro-line px-6 py-10 text-center text-pro-muted">
