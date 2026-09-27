@@ -185,6 +185,22 @@ export default function MacProject({
                                     {project.role}
                                 </div>
                             )}
+                            <div>
+                                <span className="text-mac-amber">type:</span>{' '}
+                                {project.experience ? (
+                                    <>
+                                        work @{' '}
+                                        <Link
+                                            href="/#experience"
+                                            className="text-mac-blue hover:underline"
+                                        >
+                                            {project.experience.company}
+                                        </Link>
+                                    </>
+                                ) : (
+                                    'personal'
+                                )}
+                            </div>
                             {project.built_at && (
                                 <div>
                                     <span className="text-mac-amber">

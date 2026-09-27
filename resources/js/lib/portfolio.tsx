@@ -143,3 +143,44 @@ export function levelBlocks(level: number, width = 10): [string, string] {
 
     return ['█'.repeat(filled), '░'.repeat(width - filled)];
 }
+
+/** Length of a job, inclusive of both months: "2 yrs 3 mos". */
+export function duration(start: string, end: string | null): string {
+    const from = new Date(`${start.slice(0, 10)}T00:00:00`);
+    const to = end ? new Date(`${end.slice(0, 10)}T00:00:00`) : new Date();
+    const months = Math.max(
+        1,
+        (to.getFullYear() - from.getFullYear()) * 12 +
+            (to.getMonth() - from.getMonth()) +
+            1,
+    );
+    const y = Math.floor(months / 12);
+    const m = months % 12;
+
+    return [
+        y && `${y} yr${y > 1 ? 's' : ''}`,
+        m && `${m} mo${m > 1 ? 's' : ''}`,
+    ]
+        .filter(Boolean)
+        .join(' ');
+}
+
+/** /projects URL keeping both filters: projectsUrl('laravel', 'work'). */
+export function projectsUrl(
+    skill: string | null,
+    type: 'personal' | 'work' | null,
+): string {
+    const params = new URLSearchParams();
+
+    if (skill) {
+        params.set('skill', skill);
+    }
+
+    if (type) {
+        params.set('type', type);
+    }
+
+    const query = params.toString();
+
+    return query ? `/projects?${query}` : '/projects';
+}

@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { allSkillCount, levelBlocks, ym } from '@/lib/portfolio';
+import { allSkillCount, duration, levelBlocks, ym } from '@/lib/portfolio';
 import type { HomeProps, Skill } from '@/types/portfolio';
 import { ContactBlock, ProjectCard, ShellError } from './parts';
 import {
@@ -42,7 +42,7 @@ function SkillLine({ skill, last }: { skill: Skill; last: boolean }) {
                 >
                     <span className="tracking-[-0.05em]">
                         <span className="text-mac-green">{filled}</span>
-                        <span className="text-mac-rule">{empty}</span>
+                        <span className="text-mac-line">{empty}</span>
                     </span>
                     <span className="w-9 text-right text-mac-muted">
                         {skill.level}%
@@ -203,6 +203,9 @@ export default function MacHome({
                                         ? `[${ym(exp.end_date)}]`
                                         : 'now'}
                                 </div>
+                                <div className="text-xs text-mac-dim md:text-[13px]">
+                                    {duration(exp.start_date, exp.end_date)}
+                                </div>
                                 {!exp.end_date && (
                                     <span className="rounded border border-mac-green px-1.5 text-[11px] text-mac-green md:px-2 md:text-xs">
                                         ● current
@@ -228,6 +231,23 @@ export default function MacHome({
                                         ))}
                                     </div>
                                 )}
+                                {!!exp.projects?.length && (
+                                    <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-[13px]">
+                                        <span className="text-mac-dim">
+                                            └─ projects:
+                                        </span>
+                                        {exp.projects.map((p) => (
+                                            <Link
+                                                key={p.id}
+                                                href={`/projects/${p.slug}`}
+                                                title={p.summary ?? undefined}
+                                                className="text-mac-blue hover:underline"
+                                            >
+                                                {p.slug}/
+                                            </Link>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ))
@@ -237,7 +257,7 @@ export default function MacHome({
             {/* ls projects/ --featured */}
             <section id="projects" className="flex flex-col gap-5 md:gap-7">
                 <div className="flex items-baseline gap-4 border-b border-mac-rule pb-3.5">
-                    <Prompt>ls projects/ --featured</Prompt>
+                    <Prompt>ls projects/personal/ --featured</Prompt>
                     <span className="flex-1" />
                     <Link
                         href="/projects"
