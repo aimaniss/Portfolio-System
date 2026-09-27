@@ -1,6 +1,11 @@
 import { Link } from '@inertiajs/react';
 import { ArrowRight, Download, Github, Linkedin, MapPin } from 'lucide-react';
-import { duration, levelLabel, monthYear } from '@/lib/portfolio';
+import {
+    duration,
+    jobProjectsUrl,
+    levelLabel,
+    monthYear,
+} from '@/lib/portfolio';
 import { cn } from '@/lib/utils';
 import type { HomeProps } from '@/types/portfolio';
 import {
@@ -323,6 +328,16 @@ export default function ProHome({
                                             </Link>
                                         ))}
                                     </div>
+                                )}
+                                {(exp.published_projects_count ?? 0) >
+                                    (exp.projects?.length ?? 0) && (
+                                    <Link
+                                        href={jobProjectsUrl(exp.id)}
+                                        className="mt-1 self-start text-sm font-medium text-pro-accent hover:underline"
+                                    >
+                                        View all {exp.published_projects_count}{' '}
+                                        projects at {exp.company} →
+                                    </Link>
                                 )}
                             </li>
                         ))}

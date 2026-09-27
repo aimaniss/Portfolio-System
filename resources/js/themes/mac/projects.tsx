@@ -40,6 +40,7 @@ export default function MacProjects({
     skills,
     activeSkill,
     activeType,
+    activeExperience,
 }: Omit<ProjectsProps, 'theme'>) {
     const user = shellUser(profile.name);
     const chip = (active: boolean) =>
@@ -52,6 +53,7 @@ export default function MacProjects({
     const flags = [
         activeType && `--type=${activeType}`,
         activeSkill && `--skill=${activeSkill}`,
+        activeExperience && `--company="${activeExperience.company}"`,
     ]
         .filter(Boolean)
         .join(' ');
@@ -76,8 +78,29 @@ export default function MacProjects({
                     ls -la{flags && ` ${flags}`}
                 </SectionHead>
 
+                {activeExperience && (
+                    <div className="text-[13px] text-mac-muted">
+                        # built at{' '}
+                        <span className="text-mac-amber">
+                            {activeExperience.company}
+                        </span>{' '}
+                        as {activeExperience.position} ·{' '}
+                        <Link
+                            href="/projects"
+                            className="text-mac-blue hover:underline"
+                        >
+                            show all projects
+                        </Link>
+                    </div>
+                )}
+
                 <div className="flex flex-col gap-2.5">
-                    <div className="flex flex-wrap items-center gap-2">
+                    <div
+                        className={cn(
+                            'flex flex-wrap items-center gap-2',
+                            activeExperience && 'hidden',
+                        )}
+                    >
                         <span className="mr-1 w-14 text-[13px] text-mac-muted">
                             --type
                         </span>

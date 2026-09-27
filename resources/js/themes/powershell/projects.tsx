@@ -53,6 +53,7 @@ export default function PsProjects({
     skills,
     activeSkill,
     activeType,
+    activeExperience,
 }: Omit<ProjectsProps, 'theme'>) {
     const user = psUser(profile.name);
     const chip = (active: boolean) =>
@@ -84,10 +85,35 @@ export default function PsProjects({
                             </span>
                         </>
                     )}
+                    {activeExperience && (
+                        <>
+                            {' '}
+                            <Arg>|</Arg> <Cmd>Where-Object</Cmd> Company{' '}
+                            <Arg>-eq</Arg>{' '}
+                            <span className="text-ps-yellow">
+                                '{activeExperience.company}'
+                            </span>
+                        </>
+                    )}
                 </PsHead>
 
+                {activeExperience && (
+                    <div className="text-[13px] text-ps-muted">
+                        Built at {activeExperience.company} as{' '}
+                        {activeExperience.position} ·{' '}
+                        <Link href="/projects" className={psLink}>
+                            Show all projects
+                        </Link>
+                    </div>
+                )}
+
                 <div className="flex flex-col gap-2.5">
-                    <div className="flex flex-wrap items-center gap-2">
+                    <div
+                        className={cn(
+                            'flex flex-wrap items-center gap-2',
+                            activeExperience && 'hidden',
+                        )}
+                    >
                         <span className="mr-1 w-14 text-[13px] text-ps-muted">
                             -Type
                         </span>

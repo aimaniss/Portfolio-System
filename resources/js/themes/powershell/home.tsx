@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Link } from '@inertiajs/react';
 import { cn } from '@/lib/utils';
-import { duration, levelLabel, ym } from '@/lib/portfolio';
+import { duration, jobProjectsUrl, levelLabel, ym } from '@/lib/portfolio';
 import type { HomeProps, Skill } from '@/types/portfolio';
 import { PsContact, PsProjectCard } from './parts';
 import {
@@ -303,6 +303,27 @@ export default function PsHome({
                                                                       </Link>
                                                                   </span>
                                                               ),
+                                                          )}
+                                                          {(exp.published_projects_count ??
+                                                              0) >
+                                                              exp.projects
+                                                                  .length && (
+                                                              <>
+                                                                  {', '}
+                                                                  <Link
+                                                                      href={jobProjectsUrl(
+                                                                          exp.id,
+                                                                      )}
+                                                                      className="text-ps-muted hover:text-ps-accent"
+                                                                  >
+                                                                      … View all
+                                                                      (
+                                                                      {
+                                                                          exp.published_projects_count
+                                                                      }
+                                                                      )
+                                                                  </Link>
+                                                              </>
                                                           )}
                                                       </span>,
                                                   ],

@@ -38,6 +38,7 @@ export default function ProProjects({
     skills,
     activeSkill,
     activeType,
+    activeExperience,
 }: Omit<ProjectsProps, 'theme'>) {
     const pill = (active: boolean) =>
         cn(
@@ -60,15 +61,34 @@ export default function ProProjects({
                         ← Home
                     </Link>
                     <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">
-                        Projects
+                        {activeExperience
+                            ? `Projects at ${activeExperience.company}`
+                            : 'Projects'}
                     </h1>
                     <p className="text-lg text-pro-soft">
-                        Personal side projects and work delivered for employers.
+                        {activeExperience ? (
+                            <>
+                                Built as {activeExperience.position}.{' '}
+                                <Link
+                                    href="/projects"
+                                    className="font-medium text-pro-accent hover:underline"
+                                >
+                                    See all projects
+                                </Link>
+                            </>
+                        ) : (
+                            'Personal side projects and work delivered for employers.'
+                        )}
                     </p>
                 </div>
 
                 <div className="flex flex-col gap-4">
-                    <div className="inline-flex self-start rounded-full border border-pro-line bg-pro-surface p-1">
+                    <div
+                        className={cn(
+                            'inline-flex self-start rounded-full border border-pro-line bg-pro-surface p-1',
+                            activeExperience && 'hidden',
+                        )}
+                    >
                         {types.map(([type, label]) => (
                             <Link
                                 key={label}

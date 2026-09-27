@@ -1,5 +1,11 @@
 import { Link } from '@inertiajs/react';
-import { allSkillCount, duration, levelLabel, ym } from '@/lib/portfolio';
+import {
+    allSkillCount,
+    duration,
+    jobProjectsUrl,
+    levelLabel,
+    ym,
+} from '@/lib/portfolio';
 import { cn } from '@/lib/utils';
 import type { HomeProps, Skill } from '@/types/portfolio';
 import { ContactBlock, ProjectCard, ShellError } from './parts';
@@ -242,6 +248,17 @@ export default function MacHome({
                                                 {p.slug}/
                                             </Link>
                                         ))}
+                                        {(exp.published_projects_count ?? 0) >
+                                            exp.projects.length && (
+                                            <Link
+                                                href={jobProjectsUrl(exp.id)}
+                                                className="text-mac-muted hover:text-mac-blue"
+                                            >
+                                                … view all (
+                                                {exp.published_projects_count})
+                                                →
+                                            </Link>
+                                        )}
                                     </div>
                                 )}
                             </div>

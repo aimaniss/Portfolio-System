@@ -187,3 +187,8 @@ export function projectsUrl(
 
     return query ? `/projects?${query}` : '/projects';
 }
+
+/** All published projects built at one job. */
+export function jobProjectsUrl(experienceId: number): string {
+    return `/projects?experience=${experienceId}`;
+}
