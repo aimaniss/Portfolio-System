@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { Menu, X } from 'lucide-react';
+import { ArrowUp, Github, Linkedin, Mail, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { useFlashToast } from '@/hooks/use-flash-toast';
@@ -37,8 +37,15 @@ export function ProShell({
                 <div className="mx-auto flex h-16 max-w-6xl items-center gap-6 px-5 md:px-8">
                     <Link
                         href="/"
-                        className="text-[17px] font-semibold tracking-tight"
+                        className="flex items-center gap-2.5 text-[17px] font-semibold tracking-tight"
                     >
+                        <span className="flex size-8 items-center justify-center rounded-lg bg-pro-ink text-xs font-semibold tracking-normal text-white">
+                            {name
+                                .split(/\s+/)
+                                .slice(0, 2)
+                                .map((w) => w[0]?.toUpperCase())
+                                .join('')}
+                        </span>
                         {name}
                     </Link>
                     <span className="flex-1" />
@@ -106,7 +113,16 @@ export function ProShell({
                         © {new Date().getFullYear()} {name}
                     </span>
                     <span className="flex-1" />
-                    <span>Built with Laravel & Inertia</span>
+                    <a
+                        href="#top"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className="inline-flex items-center gap-1.5 hover:text-pro-ink"
+                    >
+                        Back to top <ArrowUp className="size-3.5" />
+                    </a>
                 </div>
             </footer>
         </div>
@@ -195,8 +211,14 @@ export function ProProjectCard({ project }: { project: Project }) {
                     className="aspect-[16/10] w-full bg-pro-line/40 object-cover"
                 />
             ) : (
-                <div className="flex aspect-[16/10] items-center justify-center bg-pro-accent-soft text-3xl font-semibold text-pro-accent/60">
-                    {project.title.slice(0, 1).toUpperCase()}
+                <div className="relative flex aspect-[16/10] items-end overflow-hidden bg-gradient-to-br from-pro-accent-soft via-pro-surface to-pro-bg p-5">
+                    <div
+                        aria-hidden
+                        className="absolute inset-0 bg-[radial-gradient(var(--color-pro-line)_1px,transparent_1px)] [background-size:16px_16px] opacity-70"
+                    />
+                    <span className="relative text-2xl leading-tight font-semibold tracking-tight text-pro-accent/80">
+                        {project.title}
+                    </span>
                 </div>
             )}
             <div className="flex flex-1 flex-col gap-2 p-5">
@@ -249,6 +271,14 @@ function ProError({ message }: { message?: string }) {
     return message ? <p className="text-sm text-red-600">{message}</p> : null;
 }
 
+function ContactIcon({ children }: { children: ReactNode }) {
+    return (
+        <span className="flex size-10 items-center justify-center rounded-xl border border-pro-line bg-pro-surface text-pro-accent">
+            {children}
+        </span>
+    );
+}
+
 export function ProContact({
     profile,
 }: {
@@ -263,13 +293,18 @@ export function ProContact({
                     Have a project or a role in mind? Send a message and I'll
                     get back to you.
                 </p>
-                <div className="flex flex-col gap-2 text-[15px]">
+                <div className="flex flex-col gap-3 text-[15px]">
                     {profile.email && (
                         <a
                             href={`mailto:${profile.email}`}
-                            className="text-pro-accent hover:underline"
+                            className="group flex items-center gap-3 text-pro-ink"
                         >
-                            {profile.email}
+                            <ContactIcon>
+                                <Mail className="size-4" />
+                            </ContactIcon>
+                            <span className="group-hover:text-pro-accent">
+                                {profile.email}
+                            </span>
                         </a>
                     )}
                     {profile.github_url && (
@@ -277,9 +312,17 @@ export function ProContact({
                             href={profile.github_url}
                             target="_blank"
                             rel="noreferrer"
-                            className="text-pro-soft hover:text-pro-ink"
+                            className="group flex items-center gap-3 text-pro-ink"
                         >
-                            GitHub ↗
+                            <ContactIcon>
+                                <Github className="size-4" />
+                            </ContactIcon>
+                            <span className="group-hover:text-pro-accent">
+                                {profile.github_url.replace(
+                                    /^https?:\/\/(www\.)?/,
+                                    '',
+                                )}
+                            </span>
                         </a>
                     )}
                     {profile.linkedin_url && (
@@ -287,9 +330,14 @@ export function ProContact({
                             href={profile.linkedin_url}
                             target="_blank"
                             rel="noreferrer"
-                            className="text-pro-soft hover:text-pro-ink"
+                            className="group flex items-center gap-3 text-pro-ink"
                         >
-                            LinkedIn ↗
+                            <ContactIcon>
+                                <Linkedin className="size-4" />
+                            </ContactIcon>
+                            <span className="group-hover:text-pro-accent">
+                                LinkedIn
+                            </span>
                         </a>
                     )}
                 </div>

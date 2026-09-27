@@ -1,4 +1,5 @@
 import { Link } from '@inertiajs/react';
+import { ArrowRight, Download, Github, Linkedin, MapPin } from 'lucide-react';
 import { duration, levelLabel, monthYear } from '@/lib/portfolio';
 import { cn } from '@/lib/utils';
 import type { HomeProps } from '@/types/portfolio';
@@ -13,6 +14,35 @@ import {
     Section,
 } from './shell';
 
+/** "5+ | Years experience", "12 | Projects", "18 | Technologies" */
+function heroFacts(
+    experiences: HomeProps['experiences'],
+    projectCount: number,
+    categories: HomeProps['categories'],
+): [string, string][] {
+    const facts: [string, string][] = [];
+    const starts = experiences.map((e) => new Date(e.start_date).getTime());
+
+    if (starts.length) {
+        const years = Math.floor(
+            (Date.now() - Math.min(...starts)) / (365.25 * 24 * 3600 * 1000),
+        );
+        facts.push([years < 1 ? '<1' : `${years}+`, 'Years experience']);
+    }
+
+    if (projectCount) {
+        facts.push([String(projectCount), 'Projects']);
+    }
+
+    const skills = categories.reduce((n, c) => n + c.skills.length, 0);
+
+    if (skills) {
+        facts.push([String(skills), 'Technologies']);
+    }
+
+    return facts;
+}
+
 function initials(name: string): string {
     return name
         .split(/\s+/)
@@ -26,49 +56,48 @@ export default function ProHome({
     categories,
     experiences,
     projects,
+    projectCount,
 }: Omit<HomeProps, 'theme'>) {
+    const facts = heroFacts(experiences, projectCount, categories);
+
     return (
         <ProShell name={profile.name} onHome>
             {/* hero */}
             <section
                 id="about"
-                className="scroll-mt-20 border-b border-pro-line"
+                className="relative scroll-mt-20 overflow-hidden border-b border-pro-line"
             >
-                <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 py-14 md:flex-row md:items-center md:gap-14 md:px-8 md:py-24">
-                    {profile.avatar_url ? (
-                        <img
-                            src={profile.avatar_url}
-                            alt={profile.name}
-                            className="size-28 shrink-0 rounded-full object-cover ring-4 ring-pro-surface md:order-2 md:size-56"
-                        />
-                    ) : (
-                        <div className="flex size-28 shrink-0 items-center justify-center rounded-full bg-pro-accent-soft text-3xl font-semibold text-pro-accent md:order-2 md:size-56 md:text-6xl">
-                            {initials(profile.name)}
-                        </div>
-                    )}
-                    <div className="flex flex-1 flex-col gap-5">
+                <div
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 bg-[radial-gradient(56rem_28rem_at_90%_-10%,var(--color-pro-accent-soft),transparent_70%)]"
+                />
+                <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 md:grid-cols-[minmax(0,1fr)_auto] md:gap-16 md:px-8 md:py-28">
+                    <div className="flex flex-col gap-6">
                         {profile.location && (
-                            <div className="flex items-center gap-2 text-sm text-pro-muted">
-                                <span className="size-2 rounded-full bg-emerald-500" />
+                            <span className="inline-flex items-center gap-2 self-start rounded-full border border-pro-line bg-pro-surface px-3 py-1 text-sm text-pro-soft shadow-sm">
+                                <MapPin className="size-3.5 text-pro-muted" />
                                 {profile.location}
-                            </div>
+                            </span>
                         )}
-                        <h1 className="text-4xl leading-[1.05] font-semibold tracking-tight md:text-6xl">
-                            {profile.name}
-                        </h1>
-                        {profile.headline && (
-                            <p className="text-lg text-pro-accent md:text-xl">
-                                {profile.headline}
-                            </p>
-                        )}
+                        <div className="flex flex-col gap-4">
+                            <h1 className="text-[42px] leading-[1.02] font-semibold tracking-[-0.03em] md:text-7xl">
+                                {profile.name}
+                            </h1>
+                            {profile.headline && (
+                                <p className="text-lg font-medium text-pro-accent md:text-2xl">
+                                    {profile.headline}
+                                </p>
+                            )}
+                        </div>
                         {profile.bio && (
                             <p className="max-w-2xl text-base leading-relaxed whitespace-pre-line text-pro-soft md:text-lg">
                                 {profile.bio}
                             </p>
                         )}
-                        <div className="mt-2 flex flex-wrap gap-3">
+                        <div className="flex flex-wrap gap-3">
                             <a href="#contact" className={proBtnPrimary}>
                                 Get in touch
+                                <ArrowRight className="ml-1.5 size-4" />
                             </a>
                             {profile.resume_url && (
                                 <a
@@ -77,7 +106,8 @@ export default function ProHome({
                                     rel="noreferrer"
                                     className={proBtnGhost}
                                 >
-                                    Download résumé
+                                    <Download className="mr-1.5 size-4" />
+                                    Résumé
                                 </a>
                             )}
                             {profile.github_url && (
@@ -85,9 +115,10 @@ export default function ProHome({
                                     href={profile.github_url}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className={proBtnGhost}
+                                    aria-label="GitHub"
+                                    className={cn(proBtnGhost, 'px-3')}
                                 >
-                                    GitHub
+                                    <Github className="size-4" />
                                 </a>
                             )}
                             {profile.linkedin_url && (
@@ -95,12 +126,48 @@ export default function ProHome({
                                     href={profile.linkedin_url}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className={proBtnGhost}
+                                    aria-label="LinkedIn"
+                                    className={cn(proBtnGhost, 'px-3')}
                                 >
-                                    LinkedIn
+                                    <Linkedin className="size-4" />
                                 </a>
                             )}
                         </div>
+                        {facts.length > 0 && (
+                            <dl className="mt-4 grid max-w-xl grid-cols-3 gap-6 border-t border-pro-line pt-6">
+                                {facts.map(([value, label]) => (
+                                    <div
+                                        key={label}
+                                        className="flex flex-col gap-1"
+                                    >
+                                        <dt className="order-2 text-sm text-pro-muted">
+                                            {label}
+                                        </dt>
+                                        <dd className="text-2xl font-semibold tracking-tight md:text-3xl">
+                                            {value}
+                                        </dd>
+                                    </div>
+                                ))}
+                            </dl>
+                        )}
+                    </div>
+
+                    <div className="relative order-first md:order-none">
+                        <div
+                            aria-hidden
+                            className="absolute -inset-3 -z-10 rotate-3 rounded-[2rem] bg-pro-accent-soft max-md:hidden"
+                        />
+                        {profile.avatar_url ? (
+                            <img
+                                src={profile.avatar_url}
+                                alt={profile.name}
+                                className="size-28 rounded-3xl object-cover shadow-xl ring-1 ring-pro-line md:size-72"
+                            />
+                        ) : (
+                            <div className="flex size-28 items-center justify-center rounded-3xl bg-gradient-to-br from-pro-accent to-indigo-400 text-3xl font-semibold text-white shadow-xl md:size-72 md:text-7xl">
+                                {initials(profile.name)}
+                            </div>
+                        )}
                     </div>
                 </div>
             </section>
@@ -202,15 +269,24 @@ export default function ProHome({
                                         {duration(exp.start_date, exp.end_date)}
                                     </div>
                                 </div>
-                                <h3 className="text-lg font-semibold tracking-tight">
-                                    {exp.position}{' '}
-                                    <span className="font-normal text-pro-muted">
-                                        ·
-                                    </span>{' '}
-                                    <span className="text-pro-accent">
-                                        {exp.company}
+                                <div className="flex items-start gap-3.5">
+                                    <span className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-pro-line bg-pro-bg text-base font-semibold text-pro-accent">
+                                        {initials(exp.company)}
                                     </span>
-                                </h3>
+                                    <div className="flex min-w-0 flex-col">
+                                        <h3 className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-lg font-semibold tracking-tight">
+                                            {exp.position}
+                                            {!exp.end_date && (
+                                                <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium tracking-normal text-emerald-700">
+                                                    Current
+                                                </span>
+                                            )}
+                                        </h3>
+                                        <span className="text-[15px] text-pro-accent">
+                                            {exp.company}
+                                        </span>
+                                    </div>
+                                </div>
                                 {exp.description && (
                                     <p className="max-w-3xl leading-relaxed whitespace-pre-line text-pro-soft">
                                         {exp.description}
