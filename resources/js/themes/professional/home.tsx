@@ -176,18 +176,18 @@ export default function ProHome({
                 {categories.length === 0 ? (
                     <Empty>Skills will appear here soon.</Empty>
                 ) : (
-                    <div className="flex flex-col gap-10">
+                    <div className="flex flex-col gap-7">
                         {categories
                             .filter((cat) => cat.skills.length > 0)
                             .map((cat) => (
                                 <div
                                     key={cat.id}
-                                    className="flex flex-col gap-4 lg:grid lg:grid-cols-[160px_minmax(0,1fr)] lg:gap-8"
+                                    className="flex flex-col gap-3 lg:grid lg:grid-cols-[140px_minmax(0,1fr)] lg:gap-6"
                                 >
-                                    <h3 className="text-xs font-semibold tracking-[0.14em] text-pro-muted uppercase lg:pt-3">
+                                    <h3 className="text-xs font-semibold tracking-[0.14em] text-pro-muted uppercase lg:pt-2.5">
                                         {cat.name}
                                     </h3>
-                                    <ul className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
+                                    <ul className="grid grid-cols-4 gap-2 sm:grid-cols-6 md:grid-cols-7 lg:grid-cols-8">
                                         {[...cat.skills]
                                             .sort(
                                                 (a, b) =>
@@ -197,17 +197,17 @@ export default function ProHome({
                                             .map((s) => (
                                                 <li
                                                     key={s.id}
-                                                    className="flex flex-col items-center gap-2 rounded-2xl border border-pro-line bg-pro-surface px-2 py-4 text-center transition hover:-translate-y-0.5 hover:border-pro-accent/30 hover:shadow-[0_8px_24px_rgba(22,24,29,0.06)]"
+                                                    className="flex flex-col items-center gap-1.5 rounded-xl border border-pro-line bg-pro-surface px-1.5 py-3 text-center transition hover:-translate-y-0.5 hover:border-pro-accent/30 hover:shadow-[0_8px_24px_rgba(22,24,29,0.06)]"
                                                 >
                                                     <TechIcon
                                                         name={s.name}
-                                                        className="size-8"
+                                                        className="size-6"
                                                     />
-                                                    <span className="text-sm leading-tight font-medium">
+                                                    <span className="text-xs leading-tight font-medium">
                                                         {techLabel(s.name)}
                                                     </span>
                                                     {s.level !== null && (
-                                                        <span className="-mt-1 text-xs text-pro-muted">
+                                                        <span className="-mt-0.5 text-[10px] text-pro-muted">
                                                             {levelLabel(
                                                                 s.level,
                                                             )}
