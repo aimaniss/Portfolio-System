@@ -95,6 +95,8 @@ export type HomeProps = {
     categories: SkillCategory[];
     experiences: Experience[];
     projects: Project[];
+    /** All published projects, personal and work. */
+    projectCount: number;
 };
 
 export type ProjectsProps = {

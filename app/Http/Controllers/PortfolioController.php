@@ -27,6 +27,7 @@ class PortfolioController extends Controller
             // The projects section shows personal work only.
             'projects' => Project::query()->published()->personal()->where('is_featured', true)
                 ->with(['cover', 'skills'])->ordered()->limit(6)->get(),
+            'projectCount' => Project::query()->published()->count(),
         ]);
     }
 
