@@ -1,8 +1,7 @@
 import { Link } from '@inertiajs/react';
-import { useState } from 'react';
-import { cn } from '@/lib/utils';
 import { Markdown, year } from '@/lib/portfolio';
 import type { ProjectShowProps } from '@/types/portfolio';
+import ProGallery from './gallery';
 import { ProShell, proBtnGhost, proBtnPrimary } from './shell';
 
 export default function ProProject({
@@ -10,8 +9,6 @@ export default function ProProject({
     project,
 }: Omit<ProjectShowProps, 'theme'>) {
     const images = project.images ?? [];
-    const [active, setActive] = useState(0);
-    const current = images[active];
 
     return (
         <ProShell name={profile.name}>
@@ -62,40 +59,7 @@ export default function ProProject({
                     )}
                 </div>
 
-                {current && (
-                    <div className="flex flex-col gap-3">
-                        <img
-                            src={current.url}
-                            alt={current.caption ?? project.title}
-                            className="max-h-[560px] w-full rounded-2xl border border-pro-line bg-pro-surface object-contain"
-                        />
-                        {images.length > 1 && (
-                            <div className="flex gap-3 overflow-x-auto pb-1">
-                                {images.map((img, i) => (
-                                    <button
-                                        key={img.id}
-                                        type="button"
-                                        onClick={() => setActive(i)}
-                                        aria-label={`Image ${i + 1}`}
-                                        className={cn(
-                                            'h-16 w-24 shrink-0 overflow-hidden rounded-lg border-2 md:h-20 md:w-32',
-                                            i === active
-                                                ? 'border-pro-accent'
-                                                : 'border-transparent opacity-70 hover:opacity-100',
-                                        )}
-                                    >
-                                        <img
-                                            src={img.url}
-                                            alt=""
-                                            loading="lazy"
-                                            className="size-full object-cover"
-                                        />
-                                    </button>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-                )}
+                <ProGallery images={images} title={project.title} />
 
                 <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-14">
                     <div className="flex flex-col gap-4 text-[17px] leading-relaxed">
