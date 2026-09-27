@@ -96,6 +96,7 @@ class DatabaseSeeder extends Seeder
                 'projects' => [
                     ['HR Portal', 'Leave, claims and payroll self-service for 300+ staff.', ['laravel', 'react', 'mysql']],
                     ['Payment Gateway Integration', 'FPX and card payments with webhook reconciliation.', ['laravel', 'docker']],
+                    ['Internal Reporting Tool', 'Scheduled sales and inventory reports for managers.', ['laravel', 'mysql']],
                 ],
             ],
             [
