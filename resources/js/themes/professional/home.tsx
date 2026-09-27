@@ -108,27 +108,70 @@ export default function ProHome({
                 {categories.length === 0 ? (
                     <Empty>Skills will appear here soon.</Empty>
                 ) : (
-                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                        {categories.map((cat) => (
-                            <div
-                                key={cat.id}
-                                className="flex flex-col gap-3 rounded-2xl border border-pro-line bg-pro-surface p-5"
-                            >
-                                <div className="text-sm font-semibold capitalize">
-                                    {cat.name}
-                                </div>
-                                <div className="flex flex-wrap gap-2">
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        {categories.map((cat) => {
+                            const rated = cat.skills.filter(
+                                (s) => s.level !== null,
+                            );
+                            const plain = cat.skills.filter(
+                                (s) => s.level === null,
+                            );
+
+                            return (
+                                <div
+                                    key={cat.id}
+                                    className="flex flex-col gap-4 rounded-2xl border border-pro-line bg-pro-surface p-5 md:p-6"
+                                >
+                                    <div className="text-sm font-semibold capitalize">
+                                        {cat.name}
+                                    </div>
                                     {cat.skills.length === 0 && (
                                         <span className="text-sm text-pro-muted">
                                             —
                                         </span>
                                     )}
-                                    {cat.skills.map((s) => (
-                                        <ProChip key={s.id}>{s.name}</ProChip>
+                                    {rated.map((s) => (
+                                        <div
+                                            key={s.id}
+                                            className="flex flex-col gap-1.5"
+                                        >
+                                            <div className="flex items-baseline justify-between text-sm">
+                                                <span className="text-pro-soft">
+                                                    {s.name}
+                                                </span>
+                                                <span className="text-xs text-pro-muted tabular-nums">
+                                                    {s.level}%
+                                                </span>
+                                            </div>
+                                            <div
+                                                role="meter"
+                                                aria-label={s.name}
+                                                aria-valuenow={s.level ?? 0}
+                                                aria-valuemin={0}
+                                                aria-valuemax={100}
+                                                className="h-1.5 overflow-hidden rounded-full bg-pro-accent-soft"
+                                            >
+                                                <div
+                                                    className="h-full rounded-full bg-pro-accent"
+                                                    style={{
+                                                        width: `${s.level}%`,
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
                                     ))}
+                                    {plain.length > 0 && (
+                                        <div className="flex flex-wrap gap-2">
+                                            {plain.map((s) => (
+                                                <ProChip key={s.id}>
+                                                    {s.name}
+                                                </ProChip>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 )}
             </Section>
