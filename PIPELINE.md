@@ -126,8 +126,8 @@ VPS Contabo (docker compose: app, mysql, nginx)
 
 - PHP & Laravel installer datang dari Herd (`~/.config/herd/bin`).
 - Herd versi percuma **tiada MySQL**, jadi MySQL Server 8.4 (sedia dipasang) dijalankan sebagai proses biasa, bukan servis Windows:
-  - data dir & config: `C:UsersAiman.mysql84my.ini` (root tanpa password, 127.0.0.1:3306, DB `portfolio`)
-  - mula: `& "C:Program FilesMySQLMySQL Server 8.4inmysqld.exe" --defaults-file="C:UsersAiman.mysql84my.ini"`
+    - data dir & config: `C:\Users\Aiman\.mysql84\my.ini` (root tanpa password, 127.0.0.1:3306, DB `portfolio`)
+    - mula: `& "C:\Program Files\MySQL\MySQL Server 8.4\bin\mysqld.exe" --defaults-file="C:\Users\Aiman\.mysql84\my.ini"`
 - Port 8000 dipakai projek lain (Publishing-Management-System), jadi app ini guna **8010** (`SERVER_PORT=8010` dan `APP_URL` dalam `.env`).
 - Jalankan: `composer run dev` → http://127.0.0.1:8010 (admin: `/login`).
 - Kredential admin hanya dalam `.env` (`ADMIN_EMAIL`, `ADMIN_PASSWORD`), tidak pernah dalam kod. Jika `ADMIN_PASSWORD` kosong, seeder jana kata laluan rawak dan paparkannya sekali.
