@@ -8,7 +8,6 @@ import {
     macBtnPrimary,
     macInput,
     macLabel,
-    Placeholder,
 } from './ui';
 
 /** A shell error line, used for empty states. */
@@ -22,17 +21,12 @@ export function ProjectCard({ project }: { project: Project }) {
             href={`/projects/${project.slug}`}
             className="group flex flex-col overflow-hidden rounded-[10px] border border-mac-rule bg-mac-panel text-mac-text transition-colors hover:border-mac-line"
         >
-            {project.experience_id ? null : project.cover ? (
+            {!project.experience_id && project.cover && (
                 <img
                     src={project.cover.url}
                     alt={project.title}
                     loading="lazy"
                     className="h-44 w-full bg-mac-shot object-cover md:h-[190px]"
-                />
-            ) : (
-                <Placeholder
-                    label="[no screenshot]"
-                    className="h-44 md:h-[190px]"
                 />
             )}
             <div className="flex flex-1 flex-col gap-2.5 p-4 md:p-5">

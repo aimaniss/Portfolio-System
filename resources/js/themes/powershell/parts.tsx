@@ -10,17 +10,13 @@ export function PsProjectCard({ project }: { project: Project }) {
             href={`/projects/${project.slug}`}
             className="group flex flex-col overflow-hidden rounded-md border border-ps-rule bg-ps-panel text-ps-text transition-colors hover:border-ps-line"
         >
-            {project.experience_id ? null : project.cover ? (
+            {!project.experience_id && project.cover && (
                 <img
                     src={project.cover.url}
                     alt={project.title}
                     loading="lazy"
                     className="h-44 w-full bg-ps-shot object-cover md:h-[190px]"
                 />
-            ) : (
-                <div className="flex h-44 items-center justify-center bg-ps-shot text-xs text-ps-muted md:h-[190px]">
-                    [no screenshot]
-                </div>
             )}
             <div className="flex flex-1 flex-col gap-2 p-4 md:p-[18px]">
                 <div className="text-xs text-ps-muted">
