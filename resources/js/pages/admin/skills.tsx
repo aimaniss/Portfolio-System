@@ -2,6 +2,7 @@ import { router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import AdminLayout from '@/layouts/admin-layout';
+import { useTerm } from '@/lib/skin';
 import { levelLabel, SKILL_LEVELS } from '@/lib/portfolio';
 import { cn } from '@/lib/utils';
 import {
@@ -51,6 +52,7 @@ function SkillChip({
     skill: Skill;
     categories: SkillCategory[];
 }) {
+    const term = useTerm();
     const [editing, setEditing] = useState(false);
     const form = useForm({
         name: skill.name,
@@ -105,7 +107,7 @@ function SkillChip({
                     ))}
                 </select>
                 <button type="submit" className={cn(linkBlue, 'text-[13px]')}>
-                    save
+                    {term('save', 'Save')}
                 </button>
                 <button
                     type="button"
@@ -115,7 +117,7 @@ function SkillChip({
                     }}
                     className="text-[13px] text-mac-muted hover:text-mac-text"
                 >
-                    esc
+                    {term('esc', 'Cancel')}
                 </button>
                 <FieldError message={form.errors.name ?? form.errors.level} />
             </form>
@@ -156,6 +158,7 @@ function CategoryPanel({
     category: SkillCategory;
     categories: SkillCategory[];
 }) {
+    const term = useTerm();
     const [renaming, setRenaming] = useState(false);
     const rename = useForm({ name: category.name });
     const add = useForm({
@@ -210,7 +213,7 @@ function CategoryPanel({
                             type="submit"
                             className={cn(linkBlue, 'text-[13px]')}
                         >
-                            save
+                            {term('save', 'Save')}
                         </button>
                         <button
                             type="button"
@@ -220,12 +223,17 @@ function CategoryPanel({
                             }}
                             className="text-[13px] text-mac-muted"
                         >
-                            esc
+                            {term('esc', 'Cancel')}
                         </button>
                     </form>
                 ) : (
-                    <span className="font-bold text-mac-blue">
-                        {category.name}/
+                    <span
+                        className={term(
+                            'font-bold text-mac-blue',
+                            'font-semibold capitalize',
+                        )}
+                    >
+                        {term(`${category.name}/`, category.name)}
                     </span>
                 )
             }
@@ -237,14 +245,14 @@ function CategoryPanel({
                             onClick={() => setRenaming(true)}
                             className={linkBlue}
                         >
-                            mv
+                            {term('mv', 'Rename')}
                         </button>
                         <button
                             type="button"
                             onClick={destroy}
                             className={linkRed}
                         >
-                            rm
+                            {term('rm', 'Delete')}
                         </button>
                     </span>
                 )
@@ -270,7 +278,10 @@ function CategoryPanel({
                     <input
                         value={add.data.name}
                         onChange={(e) => add.setData('name', e.target.value)}
-                        placeholder={`touch ${category.name}/…`}
+                        placeholder={term(
+                            `touch ${category.name}/…`,
+                            `Add a skill to ${category.name}`,
+                        )}
                         className={cn(smallInput, 'min-w-0 flex-1')}
                     />
                     <LevelInput
@@ -285,7 +296,7 @@ function CategoryPanel({
                             'py-1.5 disabled:opacity-50',
                         )}
                     >
-                        + add
+                        {term('+ add', 'Add')}
                     </button>
                 </form>
                 <FieldError message={add.errors.name ?? add.errors.level} />
@@ -299,6 +310,7 @@ export default function Skills({
 }: {
     categories: SkillCategory[];
 }) {
+    const term = useTerm();
     const form = useForm({ name: '' });
 
     const addCategory = (e: FormEvent) => {
@@ -318,7 +330,10 @@ export default function Skills({
                 <input
                     value={form.data.name}
                     onChange={(e) => form.setData('name', e.target.value)}
-                    placeholder="mkdir new-category"
+                    placeholder={term(
+                        'mkdir new-category',
+                        'New category name',
+                    )}
                     className={cn(macInput, 'sm:max-w-xs')}
                 />
                 <button
@@ -326,20 +341,25 @@ export default function Skills({
                     disabled={form.processing || !form.data.name.trim()}
                     className={cn(btnSmallPrimary, 'disabled:opacity-50')}
                 >
-                    + category
+                    {term('+ category', 'Add category')}
                 </button>
                 <FieldError message={form.errors.name} />
             </form>
 
             <div className="text-xs text-mac-muted">
-                # click a skill to rename, move it or set its level · × deletes
-                it
+                {term(
+                    '# click a skill to rename, move it or set its level · × deletes it',
+                    'Click a skill to rename it, move it or set its level. × deletes it.',
+                )}
             </div>
 
             {categories.length === 0 ? (
                 <Panel>
                     <EmptyRow>
-                        tree: skills/: No such file or directory
+                        {term(
+                            'tree: skills/: No such file or directory',
+                            'No skill categories yet.',
+                        )}
                     </EmptyRow>
                 </Panel>
             ) : (

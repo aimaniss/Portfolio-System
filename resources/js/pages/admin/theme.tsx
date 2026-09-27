@@ -2,6 +2,7 @@ import { router } from '@inertiajs/react';
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 import AdminLayout from '@/layouts/admin-layout';
+import { useTerm } from '@/lib/skin';
 import { cn } from '@/lib/utils';
 import { btnSmallGhost, btnSmallPrimary } from '@/themes/mac/admin-ui';
 import type { ThemeName } from '@/types/portfolio';
@@ -102,6 +103,7 @@ const themes: {
 ];
 
 export default function ThemePage({ current }: { current: ThemeName }) {
+    const term = useTerm();
     const [busy, setBusy] = useState<ThemeName | null>(null);
 
     const activate = (theme: ThemeName) =>
@@ -146,7 +148,7 @@ export default function ThemePage({ current }: { current: ThemeName }) {
                                     <span className="flex-1" />
                                     {active && (
                                         <span className="rounded border border-mac-green px-1.5 text-[11px] text-mac-green">
-                                            ● active
+                                            {term('● active', 'Active')}
                                         </span>
                                     )}
                                 </div>
@@ -160,7 +162,7 @@ export default function ThemePage({ current }: { current: ThemeName }) {
                                         rel="noreferrer"
                                         className={btnSmallGhost}
                                     >
-                                        preview ↗
+                                        {term('preview ↗', 'Preview')}
                                     </a>
                                     {!active && (
                                         <button
@@ -170,8 +172,11 @@ export default function ThemePage({ current }: { current: ThemeName }) {
                                             className={btnSmallPrimary}
                                         >
                                             {busy === t.id
-                                                ? 'switching…'
-                                                : 'activate'}
+                                                ? term(
+                                                      'switching…',
+                                                      'Activating…',
+                                                  )
+                                                : term('activate', 'Activate')}
                                         </button>
                                     )}
                                 </div>

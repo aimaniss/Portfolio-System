@@ -1,6 +1,7 @@
 import { Link, useForm } from '@inertiajs/react';
 import type { FormEvent } from 'react';
 import AdminLayout from '@/layouts/admin-layout';
+import { useTerm } from '@/lib/skin';
 import { cn } from '@/lib/utils';
 import {
     btnSmallGhost,
@@ -20,6 +21,7 @@ export default function ExperienceForm({
     experience: Experience | null;
     categories: SkillCategory[];
 }) {
+    const term = useTerm();
     const form = useForm({
         company: experience?.company ?? '',
         position: experience?.position ?? '',
@@ -52,7 +54,7 @@ export default function ExperienceForm({
                     href="/admin/experiences"
                     className={cn(linkBlue, 'text-[13px]')}
                 >
-                    ← back
+                    {term('← back', '← Back')}
                 </Link>
             }
         >
@@ -141,7 +143,10 @@ export default function ExperienceForm({
                                 }
                             >
                                 <span className="text-[13px] text-mac-soft">
-                                    I work here now
+                                    {term(
+                                        'I work here now',
+                                        'I currently work here',
+                                    )}
                                 </span>
                             </Check>
                         </Field>
@@ -165,7 +170,7 @@ export default function ExperienceForm({
                 </div>
 
                 <div className="flex flex-col gap-5">
-                    <Panel head="$ stack # skills used">
+                    <Panel head="$ stack # skills used" plain="Skills used">
                         <div className="p-4 md:p-5">
                             <SkillPicker
                                 categories={categories}
@@ -182,13 +187,15 @@ export default function ExperienceForm({
                             disabled={form.processing}
                             className={cn(macBtnPrimary, 'flex-1')}
                         >
-                            {form.processing ? 'saving…' : ':w save'}
+                            {form.processing
+                                ? term('saving…', 'Saving…')
+                                : term(':w save', 'Save')}
                         </button>
                         <Link
                             href="/admin/experiences"
                             className={btnSmallGhost}
                         >
-                            :q
+                            {term(':q', 'Cancel')}
                         </Link>
                     </div>
                 </div>

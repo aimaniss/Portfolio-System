@@ -1,5 +1,6 @@
 import { Link, router } from '@inertiajs/react';
 import AdminLayout from '@/layouts/admin-layout';
+import { useTerm } from '@/lib/skin';
 import { year } from '@/lib/portfolio';
 import {
     btnSmallPrimary,
@@ -14,6 +15,7 @@ import { Placeholder } from '@/themes/mac/ui';
 import type { Project } from '@/types/portfolio';
 
 export default function Projects({ projects }: { projects: Project[] }) {
+    const term = useTerm();
     const destroy = (p: Project) => {
         if (
             confirmed(
@@ -31,16 +33,22 @@ export default function Projects({ projects }: { projects: Project[] }) {
             command="ls -l projects/"
             actions={
                 <Link href="/admin/projects/create" className={btnSmallPrimary}>
-                    + new project
+                    {term('+ new project', 'New project')}
                 </Link>
             }
         >
             <Panel
                 head={`# ${projects.length} total · sorted by sort_order, then newest`}
+                plain={`${projects.length} project${projects.length === 1 ? '' : 's'}`}
                 className="overflow-hidden"
             >
                 {projects.length === 0 && (
-                    <EmptyRow>total 0 — create your first project.</EmptyRow>
+                    <EmptyRow>
+                        {term(
+                            'total 0 — create your first project.',
+                            'No projects yet — create your first one.',
+                        )}
+                    </EmptyRow>
                 )}
                 {projects.map((p) => (
                     <div
@@ -64,7 +72,7 @@ export default function Projects({ projects }: { projects: Project[] }) {
                                 href={`/admin/projects/${p.id}/edit`}
                                 className="truncate font-bold text-mac-blue hover:underline"
                             >
-                                {p.slug}/
+                                {term(`${p.slug}/`, p.title)}
                             </Link>
                             <div className="truncate text-xs text-mac-muted">
                                 {[
@@ -93,20 +101,20 @@ export default function Projects({ projects }: { projects: Project[] }) {
                                 rel="noreferrer"
                                 className="text-mac-muted hover:text-mac-text"
                             >
-                                view
+                                {term('view', 'View')}
                             </a>
                             <Link
                                 href={`/admin/projects/${p.id}/edit`}
                                 className={linkBlue}
                             >
-                                edit
+                                {term('edit', 'Edit')}
                             </Link>
                             <button
                                 type="button"
                                 onClick={() => destroy(p)}
                                 className={linkRed}
                             >
-                                rm
+                                {term('rm', 'Delete')}
                             </button>
                         </div>
                     </div>

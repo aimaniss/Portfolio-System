@@ -1,5 +1,6 @@
 import { Link, router } from '@inertiajs/react';
 import AdminLayout from '@/layouts/admin-layout';
+import { useTerm } from '@/lib/skin';
 import { duration, ym } from '@/lib/portfolio';
 import {
     btnSmallPrimary,
@@ -17,6 +18,7 @@ export default function Experiences({
 }: {
     experiences: Experience[];
 }) {
+    const term = useTerm();
     const destroy = (exp: Experience) => {
         if (confirmed(`rm ${exp.position} @ ${exp.company}?`)) {
             router.delete(`/admin/experiences/${exp.id}`, {
@@ -35,14 +37,21 @@ export default function Experiences({
                     href="/admin/experiences/create"
                     className={btnSmallPrimary}
                 >
-                    + experience
+                    {term('+ experience', 'Add experience')}
                 </Link>
             }
         >
-            <Panel head="# newest first" className="overflow-hidden">
+            <Panel
+                head="# newest first"
+                plain="Work history"
+                className="overflow-hidden"
+            >
                 {experiences.length === 0 && (
                     <EmptyRow>
-                        cat: experience.log: No such file or directory
+                        {term(
+                            'cat: experience.log: No such file or directory',
+                            'No experience yet.',
+                        )}
                     </EmptyRow>
                 )}
                 {experiences.map((exp) => (
@@ -91,14 +100,14 @@ export default function Experiences({
                                 href={`/admin/experiences/${exp.id}/edit`}
                                 className={linkBlue}
                             >
-                                edit
+                                {term('edit', 'Edit')}
                             </Link>
                             <button
                                 type="button"
                                 onClick={() => destroy(exp)}
                                 className={linkRed}
                             >
-                                rm
+                                {term('rm', 'Delete')}
                             </button>
                         </div>
                     </div>

@@ -1,5 +1,6 @@
 import { Link, router } from '@inertiajs/react';
 import AdminLayout from '@/layouts/admin-layout';
+import { useTerm } from '@/lib/skin';
 import { cn } from '@/lib/utils';
 import {
     btnSmallGhost,
@@ -26,7 +27,9 @@ function Stat({
 }) {
     return (
         <div className="flex flex-col gap-1 rounded-[10px] border border-mac-rule bg-mac-panel p-3.5 md:px-5 md:py-4.5">
-            <div className="text-[11px] text-mac-muted md:text-xs">{label}</div>
+            <div className="text-[11px] text-mac-muted first-letter:uppercase md:text-xs">
+                {label}
+            </div>
             <div
                 className={cn(
                     'text-[26px] leading-tight font-extrabold md:text-[32px]',
@@ -53,6 +56,7 @@ export default function Dashboard({
     projects: Project[];
     messages: Message[];
 }) {
+    const term = useTerm();
     const destroy = (p: Project) => {
         if (
             confirmed(
@@ -73,19 +77,19 @@ export default function Dashboard({
                         href="/admin/projects/create"
                         className={btnSmallPrimary}
                     >
-                        + new project
+                        {term('+ new project', 'New project')}
                     </Link>
                     <Link
                         href="/admin/experiences/create"
                         className={cn(btnSmallGhost, 'max-md:hidden')}
                     >
-                        + experience
+                        {term('+ experience', 'Add experience')}
                     </Link>
                     <Link
                         href="/admin/skills"
                         className={cn(btnSmallGhost, 'max-md:hidden')}
                     >
-                        + skill
+                        {term('+ skill', 'Add skill')}
                     </Link>
                 </>
             }
@@ -107,7 +111,7 @@ export default function Dashboard({
                     note={`${stats.current} current`}
                 />
                 <Stat
-                    label="unread msgs"
+                    label={term('unread msgs', 'unread messages')}
                     value={stats.unread}
                     note="unread"
                     accent
@@ -117,25 +121,31 @@ export default function Dashboard({
             <div className="grid gap-5 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:gap-6">
                 <Panel
                     head="$ ls -lt projects/"
+                    plain="Recent projects"
                     aside={
                         <Link
                             href="/admin/projects"
                             className={cn(linkBlue, 'text-[13px]')}
                         >
-                            all →
+                            {term('all →', 'View all')}
                         </Link>
                     }
                     className="overflow-hidden"
                 >
                     <div className="hidden grid-cols-[minmax(0,1.6fr)_minmax(0,1.4fr)_110px_90px] gap-3 border-b border-mac-rule px-5 py-2.5 text-xs text-mac-muted md:grid">
-                        <span>name</span>
-                        <span>stack</span>
-                        <span>status</span>
-                        <span className="text-right">actions</span>
+                        <span>{term('name', 'Project')}</span>
+                        <span>{term('stack', 'Stack')}</span>
+                        <span>{term('status', 'Status')}</span>
+                        <span className="text-right">
+                            {term('actions', 'Actions')}
+                        </span>
                     </div>
                     {projects.length === 0 && (
                         <EmptyRow>
-                            total 0 — create your first project.
+                            {term(
+                                'total 0 — create your first project.',
+                                'No projects yet — create your first one.',
+                            )}
                         </EmptyRow>
                     )}
                     {projects.map((p) => (
@@ -148,14 +158,14 @@ export default function Dashboard({
                                     href={`/admin/projects/${p.id}/edit`}
                                     className="block truncate font-bold text-mac-blue hover:underline"
                                 >
-                                    {p.slug}/
+                                    {term(`${p.slug}/`, p.title)}
                                 </Link>
                                 <div className="truncate text-[11px] text-mac-muted md:hidden">
                                     {p.skills.map((s) => s.name).join(', ') ||
                                         '—'}
                                 </div>
                             </div>
-                            <span className="hidden truncate text-[13px] text-[#a3aab4] md:block">
+                            <span className="hidden truncate text-[13px] text-mac-soft md:block">
                                 {p.skills.map((s) => s.name).join(', ') || '—'}
                             </span>
                             <span className="shrink-0 text-xs md:text-[13px]">
@@ -166,14 +176,14 @@ export default function Dashboard({
                                     href={`/admin/projects/${p.id}/edit`}
                                     className={linkBlue}
                                 >
-                                    edit
+                                    {term('edit', 'Edit')}
                                 </Link>
                                 <button
                                     type="button"
                                     onClick={() => destroy(p)}
                                     className={linkRed}
                                 >
-                                    rm
+                                    {term('rm', 'Delete')}
                                 </button>
                             </span>
                         </div>
@@ -182,12 +192,13 @@ export default function Dashboard({
 
                 <Panel
                     head="$ tail messages.log"
+                    plain="Latest messages"
                     aside={
                         <Link
                             href="/admin/messages"
                             className={cn(linkBlue, 'text-[13px]')}
                         >
-                            inbox →
+                            {term('inbox →', 'Inbox')}
                         </Link>
                     }
                     className="overflow-hidden"
@@ -225,7 +236,7 @@ export default function Dashboard({
                                     'truncate text-[13px]',
                                     m.read_at
                                         ? 'text-mac-muted'
-                                        : 'text-[#a3aab4]',
+                                        : 'text-mac-soft',
                                 )}
                             >
                                 {m.body.split('\n')[0]}

@@ -2,6 +2,7 @@ import { Link, router, useForm } from '@inertiajs/react';
 import { useEffect, useMemo, useState } from 'react';
 import type { DragEvent, FormEvent } from 'react';
 import AdminLayout from '@/layouts/admin-layout';
+import { useTerm } from '@/lib/skin';
 import { cn } from '@/lib/utils';
 import {
     btnSmallGhost,
@@ -55,6 +56,7 @@ function usePreviews(files: File[]): string[] {
 }
 
 function ProjectForm({ project, categories, experiences }: Props) {
+    const term = useTerm();
     const form = useForm<ProjectFormData>({
         experience_id: project?.experience_id
             ? String(project.experience_id)
@@ -142,7 +144,7 @@ function ProjectForm({ project, categories, experiences }: Props) {
                     href="/admin/projects"
                     className={cn(linkBlue, 'text-[13px]')}
                 >
-                    ← back
+                    {term('← back', '← Back')}
                 </Link>
             }
         >
@@ -272,9 +274,12 @@ function ProjectForm({ project, categories, experiences }: Props) {
                     {/* images */}
                     <div className="flex flex-col gap-2.5">
                         <div className="text-[13px] text-mac-amber">
-                            images{' '}
+                            {term('images', 'Images')}{' '}
                             <span className="text-mac-muted">
-                                # ★ = cover · new files upload on save
+                                {term(
+                                    '# ★ = cover · new files upload on save',
+                                    '— the starred image is the cover; new files upload when you save',
+                                )}
                             </span>
                         </div>
                         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
@@ -310,7 +315,10 @@ function ProjectForm({ project, categories, experiences }: Props) {
                                                 }
                                                 className={linkBlue}
                                             >
-                                                set cover
+                                                {term(
+                                                    'set cover',
+                                                    'Set as cover',
+                                                )}
                                             </button>
                                         )}
                                         <span className="flex-1" />
@@ -325,7 +333,7 @@ function ProjectForm({ project, categories, experiences }: Props) {
                                             }
                                             className={linkRed}
                                         >
-                                            rm
+                                            {term('rm', 'Remove')}
                                         </button>
                                     </div>
                                 </div>
@@ -413,7 +421,7 @@ function ProjectForm({ project, categories, experiences }: Props) {
 
                 {/* right */}
                 <div className="flex flex-col gap-5">
-                    <Panel head="$ owner">
+                    <Panel head="$ owner" plain="Owner">
                         <div className="flex flex-col gap-2.5 p-4 md:p-5">
                             <select
                                 id="experience_id"
@@ -427,11 +435,17 @@ function ProjectForm({ project, categories, experiences }: Props) {
                                 className={macInput}
                             >
                                 <option value="">
-                                    personal — my own project
+                                    {term(
+                                        'personal — my own project',
+                                        'Personal project',
+                                    )}
                                 </option>
                                 {experiences.map((exp) => (
                                     <option key={exp.id} value={exp.id}>
-                                        work @ {exp.company} — {exp.position}
+                                        {term(
+                                            `work @ ${exp.company} — ${exp.position}`,
+                                            `${exp.company} (${exp.position})`,
+                                        )}
                                     </option>
                                 ))}
                             </select>
@@ -450,7 +464,7 @@ function ProjectForm({ project, categories, experiences }: Props) {
                         </div>
                     </Panel>
 
-                    <Panel head="$ publish">
+                    <Panel head="$ publish" plain="Visibility">
                         <div className="flex flex-col gap-3.5 p-4 md:p-5">
                             <Check
                                 checked={form.data.is_published}
@@ -458,13 +472,16 @@ function ProjectForm({ project, categories, experiences }: Props) {
                                     form.setData('is_published', v)
                                 }
                             >
-                                published
+                                {term('published', 'Published')}
                             </Check>
                             <Check
                                 checked={form.data.is_featured}
                                 onChange={(v) => form.setData('is_featured', v)}
                             >
-                                featured on home
+                                {term(
+                                    'featured on home',
+                                    'Featured on home page',
+                                )}
                             </Check>
                             <div className="mt-1.5 flex gap-2.5">
                                 <button
@@ -472,13 +489,15 @@ function ProjectForm({ project, categories, experiences }: Props) {
                                     disabled={form.processing}
                                     className={cn(macBtnPrimary, 'flex-1')}
                                 >
-                                    {form.processing ? 'saving…' : ':w save'}
+                                    {form.processing
+                                        ? term('saving…', 'Saving…')
+                                        : term(':w save', 'Save project')}
                                 </button>
                                 <Link
                                     href="/admin/projects"
                                     className={btnSmallGhost}
                                 >
-                                    :q
+                                    {term(':q', 'Cancel')}
                                 </Link>
                             </div>
                             {project && (
@@ -488,13 +507,13 @@ function ProjectForm({ project, categories, experiences }: Props) {
                                     rel="noreferrer"
                                     className={cn(linkBlue, 'text-[13px]')}
                                 >
-                                    view on site ↗
+                                    {term('view on site ↗', 'View on site ↗')}
                                 </a>
                             )}
                         </div>
                     </Panel>
 
-                    <Panel head="$ stack # skills used">
+                    <Panel head="$ stack # skills used" plain="Skills used">
                         <div className="p-4 md:p-5">
                             <SkillPicker
                                 categories={categories}
@@ -507,11 +526,14 @@ function ProjectForm({ project, categories, experiences }: Props) {
                     </Panel>
 
                     {project && (
-                        <div className="flex flex-col gap-2.5 rounded-[10px] border border-[#4a2a2a] bg-[#221c1d] p-4 md:p-5">
+                        <div className="flex flex-col gap-2.5 rounded-[10px] border border-mac-red/40 bg-mac-red/5 p-4 md:p-5">
                             <div className="text-[13px] text-mac-red">
-                                $ rm -rf {project.slug}
+                                {term(
+                                    `$ rm -rf ${project.slug}`,
+                                    'Delete project',
+                                )}
                             </div>
-                            <div className="text-[13px] text-[#a3aab4]">
+                            <div className="text-[13px] text-mac-soft">
                                 Deletes the project and all its images.
                             </div>
                             <button
@@ -519,7 +541,7 @@ function ProjectForm({ project, categories, experiences }: Props) {
                                 onClick={destroy}
                                 className="self-start rounded-md border border-mac-red px-3.5 py-2 text-[13px] text-mac-red hover:bg-mac-red/10"
                             >
-                                delete project
+                                {term('delete project', 'Delete this project')}
                             </button>
                         </div>
                     )}

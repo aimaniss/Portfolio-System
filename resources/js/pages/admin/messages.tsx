@@ -1,6 +1,7 @@
 import { router } from '@inertiajs/react';
 import { useState } from 'react';
 import AdminLayout from '@/layouts/admin-layout';
+import { useTerm } from '@/lib/skin';
 import { cn } from '@/lib/utils';
 import {
     confirmed,
@@ -24,6 +25,7 @@ function when(date: string): string {
 }
 
 export default function Messages({ messages }: { messages: Message[] }) {
+    const term = useTerm();
     const [open, setOpen] = useState<number | null>(null);
     const unread = messages.filter((m) => !m.read_at).length;
 
@@ -48,11 +50,15 @@ export default function Messages({ messages }: { messages: Message[] }) {
         <AdminLayout title="Messages" cwd="~/admin/messages" command="mail">
             <Panel
                 head={`# ${messages.length} message${messages.length === 1 ? '' : 's'} · ${unread} unread`}
+                plain={`${messages.length} message${messages.length === 1 ? '' : 's'} · ${unread} unread`}
                 className="overflow-hidden"
             >
                 {messages.length === 0 && (
                     <EmptyRow>
-                        No mail. Messages from the contact form land here.
+                        {term(
+                            'No mail. Messages from the contact form land here.',
+                            'No messages yet. Messages from the contact form appear here.',
+                        )}
                     </EmptyRow>
                 )}
                 {messages.map((m) => {
@@ -101,7 +107,7 @@ export default function Messages({ messages }: { messages: Message[] }) {
                                         </span>
                                     </div>
                                     {!isOpen && (
-                                        <div className="truncate text-[13px] text-[#a3aab4]">
+                                        <div className="truncate text-[13px] text-mac-soft">
                                             {m.body.split('\n')[0]}
                                         </div>
                                     )}
@@ -117,21 +123,29 @@ export default function Messages({ messages }: { messages: Message[] }) {
                                             href={`mailto:${m.email}?subject=${encodeURIComponent('Re: your message')}`}
                                             className={linkBlue}
                                         >
-                                            reply ↗
+                                            {term('reply ↗', 'Reply')}
                                         </a>
                                         <button
                                             type="button"
                                             onClick={() => toggleRead(m)}
                                             className={linkBlue}
                                         >
-                                            mark {m.read_at ? 'unread' : 'read'}
+                                            {m.read_at
+                                                ? term(
+                                                      'mark unread',
+                                                      'Mark as unread',
+                                                  )
+                                                : term(
+                                                      'mark read',
+                                                      'Mark as read',
+                                                  )}
                                         </button>
                                         <button
                                             type="button"
                                             onClick={() => destroy(m)}
                                             className={linkRed}
                                         >
-                                            rm
+                                            {term('rm', 'Delete')}
                                         </button>
                                     </div>
                                 </div>

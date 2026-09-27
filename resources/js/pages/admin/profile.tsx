@@ -2,6 +2,7 @@ import { useForm } from '@inertiajs/react';
 import { useEffect, useMemo } from 'react';
 import type { FormEvent } from 'react';
 import AdminLayout from '@/layouts/admin-layout';
+import { useTerm } from '@/lib/skin';
 import {
     btnSmallGhost,
     Field,
@@ -27,6 +28,7 @@ type ProfileForm = {
 };
 
 export default function ProfilePage({ profile }: { profile: Profile }) {
+    const term = useTerm();
     const form = useForm<ProfileForm>({
         name: profile.name ?? '',
         headline: profile.headline ?? '',
@@ -166,7 +168,7 @@ export default function ProfilePage({ profile }: { profile: Profile }) {
                 </div>
 
                 <div className="flex flex-col gap-5">
-                    <Panel head="$ file avatar.png">
+                    <Panel head="$ file avatar.png" plain="Avatar">
                         <div className="flex flex-col gap-3 p-4 md:p-5">
                             {avatar ? (
                                 <img
@@ -182,7 +184,7 @@ export default function ProfilePage({ profile }: { profile: Profile }) {
                             )}
                             <div className="flex flex-wrap gap-4 text-[13px]">
                                 <label className={`${linkBlue} cursor-pointer`}>
-                                    upload…
+                                    {term('upload…', 'Upload')}
                                     <input
                                         type="file"
                                         accept="image/*"
@@ -211,7 +213,7 @@ export default function ProfilePage({ profile }: { profile: Profile }) {
                                             }))
                                         }
                                     >
-                                        rm
+                                        {term('rm', 'Remove')}
                                     </button>
                                 )}
                             </div>
@@ -226,7 +228,7 @@ export default function ProfilePage({ profile }: { profile: Profile }) {
                         </div>
                     </Panel>
 
-                    <Panel head="$ file resume.pdf">
+                    <Panel head="$ file resume.pdf" plain="Résumé">
                         <div className="flex flex-col gap-3 p-4 md:p-5">
                             <div className="truncate text-[13px]">
                                 {form.data.resume ? (
@@ -244,13 +246,16 @@ export default function ProfilePage({ profile }: { profile: Profile }) {
                                     </a>
                                 ) : (
                                     <span className="text-mac-muted">
-                                        No such file.
+                                        {term(
+                                            'No such file.',
+                                            'No résumé uploaded.',
+                                        )}
                                     </span>
                                 )}
                             </div>
                             <div className="flex flex-wrap gap-4 text-[13px]">
                                 <label className={`${linkBlue} cursor-pointer`}>
-                                    upload…
+                                    {term('upload…', 'Upload')}
                                     <input
                                         type="file"
                                         accept="application/pdf"
@@ -279,7 +284,7 @@ export default function ProfilePage({ profile }: { profile: Profile }) {
                                             }))
                                         }
                                     >
-                                        rm
+                                        {term('rm', 'Remove')}
                                     </button>
                                 )}
                             </div>
@@ -300,7 +305,9 @@ export default function ProfilePage({ profile }: { profile: Profile }) {
                             disabled={form.processing}
                             className={`${macBtnPrimary} flex-1`}
                         >
-                            {form.processing ? 'saving…' : ':w save'}
+                            {form.processing
+                                ? term('saving…', 'Saving…')
+                                : term(':w save', 'Save changes')}
                         </button>
                         {form.isDirty && (
                             <button
@@ -308,7 +315,7 @@ export default function ProfilePage({ profile }: { profile: Profile }) {
                                 onClick={() => form.reset()}
                                 className={btnSmallGhost}
                             >
-                                undo
+                                {term('undo', 'Discard')}
                             </button>
                         )}
                     </div>
