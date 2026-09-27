@@ -131,8 +131,7 @@ export default function PsHome({
                 </PsHead>
                 {categories.length === 0 ? (
                     <PsNotFound>
-                        Get-ChildItem: Cannot find path 'C:\Users\{user}\skills'
-                        because it does not exist.
+                        {`Get-ChildItem: Cannot find path 'C:\\Users\\${user}\\skills' because it does not exist.`}
                     </PsNotFound>
                 ) : (
                     <div className="grid grid-cols-[minmax(84px,auto)_minmax(0,1fr)] gap-x-4 gap-y-2.5 md:grid-cols-[180px_minmax(0,1fr)] md:gap-x-6">
@@ -167,8 +166,7 @@ export default function PsHome({
                 </PsHead>
                 {experiences.length === 0 ? (
                     <PsNotFound>
-                        Get-Content: Cannot find path 'C:\Users\{user}
-                        \experience.json' because it does not exist.
+                        {`Get-Content: Cannot find path 'C:\\Users\\${user}\\experience.json' because it does not exist.`}
                     </PsNotFound>
                 ) : (
                     <div className="grid gap-4 md:grid-cols-2 md:gap-5 xl:grid-cols-3">
