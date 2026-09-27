@@ -15,7 +15,7 @@ class ExperienceController extends Controller
     public function index(): Response
     {
         return Inertia::render('admin/experiences/index', [
-            'experiences' => Experience::query()->with('skills')->orderByDesc('start_date')->get(),
+            'experiences' => Experience::query()->with('skills')->withCount('projects')->orderByDesc('start_date')->get(),
         ]);
     }
 

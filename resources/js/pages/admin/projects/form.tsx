@@ -14,11 +14,17 @@ import {
     SkillPicker,
 } from '@/themes/mac/admin-ui';
 import { FieldError, macBtnPrimary, macInput } from '@/themes/mac/ui';
-import type { Project, SkillCategory } from '@/types/portfolio';
+import type { Project, ProjectCompany, SkillCategory } from '@/types/portfolio';
 
-type Props = { project: Project | null; categories: SkillCategory[] };
+type Props = {
+    project: Project | null;
+    categories: SkillCategory[];
+    experiences: ProjectCompany[];
+};
 
 type ProjectFormData = {
+    /** '' = personal project. */
+    experience_id: string;
     title: string;
     slug: string;
     summary: string;
@@ -48,8 +54,11 @@ function usePreviews(files: File[]): string[] {
     return urls;
 }
 
-function ProjectForm({ project, categories }: Props) {
+function ProjectForm({ project, categories, experiences }: Props) {
     const form = useForm<ProjectFormData>({
+        experience_id: project?.experience_id
+            ? String(project.experience_id)
+            : '',
         title: project?.title ?? '',
         slug: project?.slug ?? '',
         summary: project?.summary ?? '',
@@ -404,6 +413,43 @@ function ProjectForm({ project, categories }: Props) {
 
                 {/* right */}
                 <div className="flex flex-col gap-5">
+                    <Panel head="$ owner">
+                        <div className="flex flex-col gap-2.5 p-4 md:p-5">
+                            <select
+                                id="experience_id"
+                                value={form.data.experience_id}
+                                onChange={(e) =>
+                                    form.setData(
+                                        'experience_id',
+                                        e.target.value,
+                                    )
+                                }
+                                className={macInput}
+                            >
+                                <option value="">
+                                    personal — my own project
+                                </option>
+                                {experiences.map((exp) => (
+                                    <option key={exp.id} value={exp.id}>
+                                        work @ {exp.company} — {exp.position}
+                                    </option>
+                                ))}
+                            </select>
+                            <div className="text-xs text-mac-muted">
+                                {form.data.experience_id
+                                    ? 'Listed under this job in work experience.'
+                                    : 'Listed in the projects section.'}
+                            </div>
+                            {experiences.length === 0 && (
+                                <div className="text-xs text-mac-muted">
+                                    Add a job under experiences/ to file work
+                                    projects.
+                                </div>
+                            )}
+                            <FieldError message={form.errors.experience_id} />
+                        </div>
+                    </Panel>
+
                     <Panel head="$ publish">
                         <div className="flex flex-col gap-3.5 p-4 md:p-5">
                             <Check

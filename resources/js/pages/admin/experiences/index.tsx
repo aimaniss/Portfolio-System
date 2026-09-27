@@ -1,6 +1,6 @@
 import { Link, router } from '@inertiajs/react';
 import AdminLayout from '@/layouts/admin-layout';
-import { ym } from '@/lib/portfolio';
+import { duration, ym } from '@/lib/portfolio';
 import {
     btnSmallPrimary,
     confirmed,
@@ -66,6 +66,11 @@ export default function Experiences({
                                 {exp.position}{' '}
                                 <span className="font-medium text-mac-amber">
                                     @ {exp.company}
+                                </span>
+                                <span className="ml-2 text-xs font-normal text-mac-muted">
+                                    {duration(exp.start_date, exp.end_date)}
+                                    {!!exp.projects_count &&
+                                        ` · ${exp.projects_count} project${exp.projects_count > 1 ? 's' : ''}`}
                                 </span>
                             </div>
                             {exp.description && (

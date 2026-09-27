@@ -68,6 +68,9 @@ export default function Projects({ projects }: { projects: Project[] }) {
                             </Link>
                             <div className="truncate text-xs text-mac-muted">
                                 {[
+                                    p.experience
+                                        ? `@ ${p.experience.company}`
+                                        : 'personal',
                                     year(p.built_at),
                                     p.skills.map((s) => s.name).join(', '),
                                 ]

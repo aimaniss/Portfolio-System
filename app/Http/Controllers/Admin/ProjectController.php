@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Experience;
 use App\Models\Project;
 use App\Models\ProjectImage;
 use App\Models\SkillCategory;
@@ -19,7 +20,7 @@ class ProjectController extends Controller
     public function index(): Response
     {
         return Inertia::render('admin/projects/index', [
-            'projects' => Project::query()->with(['cover', 'skills'])->ordered()->get(),
+            'projects' => Project::query()->with(['cover', 'skills', 'experience:id,company'])->ordered()->get(),
         ]);
     }
 
@@ -28,6 +29,7 @@ class ProjectController extends Controller
         return Inertia::render('admin/projects/form', [
             'project' => null,
             'categories' => $this->categories(),
+            'experiences' => $this->experiences(),
         ]);
     }
 
@@ -48,6 +50,7 @@ class ProjectController extends Controller
         return Inertia::render('admin/projects/form', [
             'project' => $project->load(['images', 'skills']),
             'categories' => $this->categories(),
+            'experiences' => $this->experiences(),
         ]);
     }
 
@@ -104,6 +107,7 @@ class ProjectController extends Controller
         $request->merge(['slug' => Str::slug($request->input('slug') ?: $request->input('title'))]);
 
         $data = $request->validate([
+            'experience_id' => ['nullable', 'integer', 'exists:experiences,id'],
             'title' => ['required', 'string', 'max:150'],
             'slug' => ['required', 'string', 'max:160', Rule::unique('projects', 'slug')->ignore($project?->id)],
             'summary' => ['nullable', 'string', 'max:255'],
@@ -139,6 +143,13 @@ class ProjectController extends Controller
             ]);
             $hasCover = true;
         }
+    }
+
+    /** Jobs a project can belong to, newest first. */
+    private function experiences()
+    {
+        return Experience::query()->orderByDesc('start_date')
+            ->get(['id', 'company', 'position', 'start_date', 'end_date']);
     }
 
     private function categories()
