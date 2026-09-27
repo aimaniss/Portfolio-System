@@ -6,6 +6,7 @@ use App\Models\Experience;
 use App\Models\Message;
 use App\Models\Profile;
 use App\Models\Project;
+use App\Models\SkillCategory;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -101,6 +102,19 @@ class PortfolioTest extends TestCase
 
         $this->post('/admin/projects', ['title' => 'Ghost', 'experience_id' => 999])
             ->assertSessionHasErrors('experience_id');
+    }
+
+    public function test_skill_levels_are_limited_to_the_four_tiers()
+    {
+        $this->actingAs(User::first());
+        $category = SkillCategory::first();
+
+        $this->post('/admin/skills', ['skill_category_id' => $category->id, 'name' => 'go', 'level' => 4])
+            ->assertSessionHasNoErrors();
+        $this->assertSame(4, $category->skills()->where('name', 'go')->value('level'));
+
+        $this->post('/admin/skills', ['skill_category_id' => $category->id, 'name' => 'rust', 'level' => 85])
+            ->assertSessionHasErrors('level');
     }
 
     public function test_contact_form_stores_a_message()

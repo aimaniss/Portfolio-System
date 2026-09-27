@@ -43,13 +43,13 @@ class DatabaseSeeder extends Seeder
             'bio' => 'Building web apps and systems end to end — Laravel, React and Node on the front of it, Docker and CI/CD pipelines behind it. Currently going deep on infrastructure.',
         ]);
 
-        // name => proficiency (0-100). Tune these from the admin panel.
+        // name => level (1 beginner, 2 intermediate, 3 advanced, 4 expert). Tune these in the admin.
         $skills = [
-            'languages' => ['php' => 85, 'javascript' => 80, 'typescript' => 70],
-            'frontend' => ['react' => 80, 'react-native' => 65, 'inertia.js' => 80, 'blade' => 85],
-            'backend' => ['laravel' => 90, 'node.js' => 70],
-            'database' => ['mysql' => 85, 'mariadb' => 75, 'postgresql' => 65],
-            'devops' => ['docker' => 75, 'jenkins' => 60, 'github-actions' => 70, 'uptime-kuma' => 65],
+            'languages' => ['php' => 4, 'javascript' => 3, 'typescript' => 3],
+            'frontend' => ['react' => 3, 'react-native' => 2, 'inertia.js' => 3, 'blade' => 4],
+            'backend' => ['laravel' => 4, 'node.js' => 3],
+            'database' => ['mysql' => 4, 'mariadb' => 3, 'postgresql' => 2],
+            'devops' => ['docker' => 3, 'jenkins' => 2, 'github-actions' => 3, 'uptime-kuma' => 2],
         ];
 
         $order = 0;
