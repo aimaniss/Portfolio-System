@@ -134,3 +134,12 @@ export function Markdown({
 
     return <>{blocks}</>;
 }
+
+/** 80 → "████████░░" (terminal-style proficiency bar). */
+export function levelBlocks(level: number, width = 10): [string, string] {
+    const filled = Math.round(
+        (Math.min(Math.max(level, 0), 100) / 100) * width,
+    );
+
+    return ['█'.repeat(filled), '░'.repeat(width - filled)];
+}

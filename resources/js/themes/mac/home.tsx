@@ -1,6 +1,6 @@
 import { Link } from '@inertiajs/react';
-import { allSkillCount, ym } from '@/lib/portfolio';
-import type { HomeProps } from '@/types/portfolio';
+import { allSkillCount, levelBlocks, ym } from '@/lib/portfolio';
+import type { HomeProps, Skill } from '@/types/portfolio';
 import { ContactBlock, ProjectCard, ShellError } from './parts';
 import {
     Chip,
@@ -22,6 +22,35 @@ function lastLogin(): string {
     const time = d.toTimeString().slice(0, 8);
 
     return `${day} ${month} ${String(d.getDate()).padStart(2, ' ')} ${time}`;
+}
+
+/** "├─ laravel ········ █████████░ 90%" */
+function SkillLine({ skill, last }: { skill: Skill; last: boolean }) {
+    const [filled, empty] =
+        skill.level === null ? ['', ''] : levelBlocks(skill.level);
+
+    return (
+        <div className="flex items-center gap-2 text-mac-dim">
+            <span className="shrink-0">{last ? '└─' : '├─'}</span>
+            <span className="min-w-0 flex-1 truncate text-mac-text">
+                {skill.name}
+            </span>
+            {skill.level !== null && (
+                <span
+                    className="flex shrink-0 items-center gap-2 text-xs md:text-[13px]"
+                    title={`${skill.level}%`}
+                >
+                    <span className="tracking-[-0.05em]">
+                        <span className="text-mac-green">{filled}</span>
+                        <span className="text-mac-rule">{empty}</span>
+                    </span>
+                    <span className="w-9 text-right text-mac-muted">
+                        {skill.level}%
+                    </span>
+                </span>
+            )}
+        </div>
+    );
 }
 
 export default function MacHome({
@@ -123,7 +152,7 @@ export default function MacHome({
                         tree: skills/: No such file or directory
                     </ShellError>
                 ) : (
-                    <div className="grid grid-cols-1 overflow-hidden rounded-[10px] border border-mac-rule bg-mac-panel text-[13px] sm:grid-cols-2 md:text-[15px] lg:grid-cols-4">
+                    <div className="grid grid-cols-1 overflow-hidden rounded-[10px] border border-mac-rule bg-mac-panel text-[13px] sm:grid-cols-2 md:text-[15px] xl:grid-cols-3">
                         {categories.map((cat) => (
                             <div
                                 key={cat.id}
@@ -138,17 +167,11 @@ export default function MacHome({
                                     </div>
                                 )}
                                 {cat.skills.map((skill, i) => (
-                                    <div
+                                    <SkillLine
                                         key={skill.id}
-                                        className="text-mac-dim"
-                                    >
-                                        {i === cat.skills.length - 1
-                                            ? '└─'
-                                            : '├─'}{' '}
-                                        <span className="text-mac-text">
-                                            {skill.name}
-                                        </span>
-                                    </div>
+                                        skill={skill}
+                                        last={i === cat.skills.length - 1}
+                                    />
                                 ))}
                             </div>
                         ))}
