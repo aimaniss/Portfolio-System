@@ -20,8 +20,12 @@ class PortfolioController extends Controller
             'theme' => $this->theme($request),
             'profile' => Profile::current(),
             'categories' => SkillCategory::query()->with('skills')->orderBy('sort_order')->get(),
-            'experiences' => Experience::query()->with('skills')->orderByDesc('start_date')->get(),
-            'projects' => Project::query()->published()->where('is_featured', true)
+            // Work projects are listed under the job they were built at.
+            'experiences' => Experience::query()
+                ->with(['skills', 'projects' => fn ($q) => $q->published()->ordered()->select(['id', 'experience_id', 'title', 'slug', 'summary'])])
+                ->orderByDesc('start_date')->get(),
+            // The projects section shows personal work only.
+            'projects' => Project::query()->published()->personal()->where('is_featured', true)
                 ->with(['cover', 'skills'])->ordered()->limit(6)->get(),
         ]);
     }
@@ -29,10 +33,13 @@ class PortfolioController extends Controller
     public function projects(Request $request): Response
     {
         $skill = $request->string('skill')->toString();
+        $type = in_array($request->query('type'), ['personal', 'work'], true) ? $request->query('type') : null;
 
         $projects = Project::query()->published()
             ->when($skill !== '', fn ($q) => $q->whereHas('skills', fn ($s) => $s->where('name', $skill)))
-            ->with(['cover', 'skills'])->ordered()->get();
+            ->when($type === 'personal', fn ($q) => $q->personal())
+            ->when($type === 'work', fn ($q) => $q->work())
+            ->with(['cover', 'skills', 'experience:id,company,position'])->ordered()->get();
 
         return Inertia::render('public/projects/index', [
             'theme' => $this->theme($request),
@@ -41,6 +48,7 @@ class PortfolioController extends Controller
             'skills' => SkillCategory::query()->with('skills')->orderBy('sort_order')->get()
                 ->flatMap->skills->pluck('name')->values(),
             'activeSkill' => $skill ?: null,
+            'activeType' => $type,
         ]);
     }
 
@@ -51,7 +59,7 @@ class PortfolioController extends Controller
         return Inertia::render('public/projects/show', [
             'theme' => $this->theme($request),
             'profile' => Profile::current()->only(['name', 'email', 'github_url', 'linkedin_url']),
-            'project' => $project->load(['images', 'skills']),
+            'project' => $project->load(['images', 'skills', 'experience:id,company,position,start_date,end_date']),
         ]);
     }
 
