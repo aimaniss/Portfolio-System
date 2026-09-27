@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Experience;
 use App\Models\Message;
 use App\Models\Profile;
 use App\Models\Project;
@@ -59,6 +60,47 @@ class PortfolioTest extends TestCase
     {
         $this->get('/projects?skill=laravel')->assertInertia(fn (Assert $page) => $page->has('projects', 1));
         $this->get('/projects?skill=jenkins')->assertInertia(fn (Assert $page) => $page->has('projects', 0));
+    }
+
+    public function test_work_projects_are_listed_under_their_job_not_the_projects_section()
+    {
+        $job = Experience::create(['company' => 'Acme', 'position' => 'Engineer', 'start_date' => '2024-01-01']);
+        Project::create([
+            'experience_id' => $job->id, 'title' => 'Billing API', 'slug' => 'billing-api',
+            'is_published' => true, 'is_featured' => true,
+        ]);
+
+        $this->get('/')->assertInertia(fn (Assert $page) => $page
+            ->has('projects', 1)
+            ->where('projects.0.slug', 'portfolio-cms')
+            ->where('experiences.0.projects.0.slug', 'billing-api'));
+
+        $this->get('/projects?type=work')->assertInertia(fn (Assert $page) => $page
+            ->where('activeType', 'work')
+            ->has('projects', 1)
+            ->where('projects.0.experience.company', 'Acme'));
+        $this->get('/projects?type=personal')->assertInertia(fn (Assert $page) => $page
+            ->has('projects', 1)
+            ->where('projects.0.slug', 'portfolio-cms'));
+        $this->get('/projects?type=bogus')->assertInertia(fn (Assert $page) => $page
+            ->where('activeType', null)
+            ->has('projects', 2));
+
+        // Deleting the job keeps the project, now as a personal one.
+        $job->delete();
+        $this->assertNull(Project::where('slug', 'billing-api')->value('experience_id'));
+    }
+
+    public function test_admin_can_file_a_project_under_a_job()
+    {
+        $this->actingAs(User::first());
+        $job = Experience::create(['company' => 'Acme', 'position' => 'Engineer', 'start_date' => '2024-01-01']);
+
+        $this->post('/admin/projects', ['title' => 'Internal Tool', 'experience_id' => $job->id])->assertRedirect();
+        $this->assertSame($job->id, Project::where('slug', 'internal-tool')->value('experience_id'));
+
+        $this->post('/admin/projects', ['title' => 'Ghost', 'experience_id' => 999])
+            ->assertSessionHasErrors('experience_id');
     }
 
     public function test_contact_form_stores_a_message()
