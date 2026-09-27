@@ -1,24 +1,12 @@
 import { Link } from '@inertiajs/react';
-import {
-    Code,
-    Container,
-    Database,
-    Download,
-    Github,
-    Layers,
-    Linkedin,
-    MapPin,
-    Monitor,
-    Server,
-} from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+import { Download, Github, Linkedin, MapPin } from 'lucide-react';
 import {
     duration,
     jobProjectsUrl,
     levelLabel,
     monthYear,
 } from '@/lib/portfolio';
-import { cn } from '@/lib/utils';
+import { TechIcon, techLabel } from '@/lib/tech-icons';
 import type { HomeProps } from '@/types/portfolio';
 import {
     Empty,
@@ -43,7 +31,7 @@ function heroFacts(
         const years = Math.floor(
             (Date.now() - Math.min(...starts)) / (365.25 * 24 * 3600 * 1000),
         );
-        facts.push([years < 1 ? '<1' : `${years}+`, 'years experience']);
+        facts.push([years < 1 ? '<1' : `${years}+`, 'Years experience']);
     }
 
     if (projectCount) {
@@ -58,43 +46,6 @@ function heroFacts(
 
     return facts;
 }
-
-const CATEGORY_ICONS: [RegExp, LucideIcon][] = [
-    [/lang/i, Code],
-    [/front|ui|web|mobile/i, Monitor],
-    [/back|api|server/i, Server],
-    [/data|db|sql/i, Database],
-    [/devops|cloud|infra|ops/i, Container],
-];
-
-function categoryIcon(name: string): LucideIcon {
-    return CATEGORY_ICONS.find(([re]) => re.test(name))?.[1] ?? Layers;
-}
-
-/** Chip style per tier: expert solid, advanced tinted, the rest outlined. */
-function skillTone(level: number | null): { chip: string; dot: string } {
-    if (level === 4) {
-        return { chip: 'bg-pro-accent text-white', dot: 'bg-pro-accent' };
-    }
-
-    if (level === 3) {
-        return {
-            chip: 'bg-pro-accent-soft text-pro-accent',
-            dot: 'bg-pro-accent-soft ring-1 ring-pro-accent/30',
-        };
-    }
-
-    return {
-        chip: 'border border-pro-line bg-pro-surface text-pro-soft',
-        dot: 'border border-pro-muted/50 bg-pro-surface',
-    };
-}
-
-const LEGEND: [number | null, string][] = [
-    [4, 'Expert'],
-    [3, 'Advanced'],
-    [2, 'Intermediate / beginner'],
-];
 
 function initials(name: string): string {
     return name
@@ -118,181 +69,155 @@ export default function ProHome({
             {/* hero */}
             <section
                 id="about"
-                className="scroll-mt-20 border-b border-pro-line"
+                className="scroll-mt-20 border-b border-pro-line bg-pro-surface"
             >
-                <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-12 md:px-8 md:py-16">
-                    <div className="flex items-center gap-4 md:gap-5">
-                        {profile.avatar_url ? (
-                            <img
-                                src={profile.avatar_url}
-                                alt={profile.name}
-                                className="size-16 shrink-0 rounded-full object-cover ring-1 ring-pro-line md:size-20"
-                            />
-                        ) : (
-                            <div className="flex size-16 shrink-0 items-center justify-center rounded-full bg-pro-accent-soft text-lg font-semibold text-pro-accent md:size-20 md:text-xl">
-                                {initials(profile.name)}
-                            </div>
-                        )}
-                        <div className="flex min-w-0 flex-col gap-1">
-                            <h1 className="text-3xl leading-tight font-semibold tracking-tight md:text-4xl">
+                <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 py-14 md:grid-cols-[minmax(0,1fr)_auto] md:gap-16 md:px-8 md:py-20">
+                    <div className="order-2 flex flex-col gap-5 md:order-1">
+                        <div className="flex flex-col gap-3">
+                            <p className="text-sm font-medium text-pro-accent">
+                                Hello, I'm
+                            </p>
+                            <h1 className="text-4xl leading-[1.08] font-semibold tracking-tight md:text-[52px]">
                                 {profile.name}
                             </h1>
                             {profile.headline && (
-                                <p className="text-[15px] text-pro-soft md:text-base">
+                                <p className="text-lg text-pro-soft md:text-xl">
                                     {profile.headline}
                                 </p>
                             )}
                         </div>
+                        {profile.bio && (
+                            <p className="max-w-xl leading-relaxed whitespace-pre-line text-pro-muted">
+                                {profile.bio}
+                            </p>
+                        )}
+                        <div className="flex flex-wrap items-center gap-3">
+                            <a href="#contact" className={proBtnPrimary}>
+                                Get in touch
+                            </a>
+                            {profile.resume_url && (
+                                <a
+                                    href={profile.resume_url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className={proBtnGhost}
+                                >
+                                    <Download className="mr-1.5 size-4" />
+                                    Résumé
+                                </a>
+                            )}
+                            <div className="flex items-center gap-1">
+                                {profile.github_url && (
+                                    <a
+                                        href={profile.github_url}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        aria-label="GitHub"
+                                        className="flex size-10 items-center justify-center rounded-full text-pro-soft hover:bg-pro-bg hover:text-pro-ink"
+                                    >
+                                        <Github className="size-5" />
+                                    </a>
+                                )}
+                                {profile.linkedin_url && (
+                                    <a
+                                        href={profile.linkedin_url}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        aria-label="LinkedIn"
+                                        className="flex size-10 items-center justify-center rounded-full text-pro-soft hover:bg-pro-bg hover:text-pro-ink"
+                                    >
+                                        <Linkedin className="size-5" />
+                                    </a>
+                                )}
+                            </div>
+                        </div>
+                        {facts.length > 0 && (
+                            <dl className="mt-3 flex max-w-xl divide-x divide-pro-line border-t border-pro-line pt-5">
+                                {facts.map(([value, label]) => (
+                                    <div
+                                        key={label}
+                                        className="flex flex-1 flex-col gap-0.5 px-4 first:pl-0"
+                                    >
+                                        <dd className="text-2xl font-semibold tracking-tight">
+                                            {value}
+                                        </dd>
+                                        <dt className="text-xs text-pro-muted sm:text-sm">
+                                            {label}
+                                        </dt>
+                                    </div>
+                                ))}
+                            </dl>
+                        )}
                     </div>
 
-                    {profile.bio && (
-                        <p className="max-w-2xl leading-relaxed whitespace-pre-line text-pro-soft md:text-[17px]">
-                            {profile.bio}
-                        </p>
-                    )}
-
-                    {(profile.location || facts.length > 0) && (
-                        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-pro-muted">
-                            {profile.location && (
-                                <span className="inline-flex items-center gap-1.5">
-                                    <MapPin className="size-3.5" />
-                                    {profile.location}
-                                </span>
-                            )}
-                            {facts.map(([value, label]) => (
-                                <span key={label}>
-                                    <span className="font-semibold text-pro-ink">
-                                        {value}
-                                    </span>{' '}
-                                    {label.toLowerCase()}
-                                </span>
-                            ))}
-                        </div>
-                    )}
-
-                    <div className="flex flex-wrap gap-2.5">
-                        <a href="#contact" className={proBtnPrimary}>
-                            Get in touch
-                        </a>
-                        {profile.resume_url && (
-                            <a
-                                href={profile.resume_url}
-                                target="_blank"
-                                rel="noreferrer"
-                                className={proBtnGhost}
-                            >
-                                <Download className="mr-1.5 size-4" />
-                                Résumé
-                            </a>
+                    <div className="order-1 flex flex-col items-start gap-3 md:order-2 md:items-center">
+                        {profile.avatar_url ? (
+                            <img
+                                src={profile.avatar_url}
+                                alt={profile.name}
+                                className="size-28 rounded-2xl object-cover shadow-[0_16px_40px_rgba(22,24,29,0.12)] ring-1 ring-pro-line md:size-56"
+                            />
+                        ) : (
+                            <div className="flex size-28 items-center justify-center rounded-2xl bg-pro-accent-soft text-3xl font-semibold text-pro-accent ring-1 ring-pro-line md:size-56 md:text-6xl">
+                                {initials(profile.name)}
+                            </div>
                         )}
-                        {profile.github_url && (
-                            <a
-                                href={profile.github_url}
-                                target="_blank"
-                                rel="noreferrer"
-                                aria-label="GitHub"
-                                className={cn(proBtnGhost, 'px-3')}
-                            >
-                                <Github className="size-4" />
-                            </a>
-                        )}
-                        {profile.linkedin_url && (
-                            <a
-                                href={profile.linkedin_url}
-                                target="_blank"
-                                rel="noreferrer"
-                                aria-label="LinkedIn"
-                                className={cn(proBtnGhost, 'px-3')}
-                            >
-                                <Linkedin className="size-4" />
-                            </a>
+                        {profile.location && (
+                            <span className="inline-flex items-center gap-1.5 text-sm text-pro-muted">
+                                <MapPin className="size-3.5" />
+                                {profile.location}
+                            </span>
                         )}
                     </div>
                 </div>
             </section>
 
-            <Section
-                id="skills"
-                eyebrow="Toolkit"
-                title="Skills"
-                aside={
-                    categories.length > 0 && (
-                        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-pro-muted">
-                            {LEGEND.map(([level, label]) => (
-                                <span
-                                    key={label}
-                                    className="inline-flex items-center gap-1.5"
-                                >
-                                    <span
-                                        className={cn(
-                                            'size-2.5 rounded-full',
-                                            skillTone(level).dot,
-                                        )}
-                                    />
-                                    {label}
-                                </span>
-                            ))}
-                        </div>
-                    )
-                }
-            >
+            <Section id="skills" eyebrow="Toolkit" title="Skills & tools">
                 {categories.length === 0 ? (
                     <Empty>Skills will appear here soon.</Empty>
                 ) : (
-                    <div className="divide-y divide-pro-line overflow-hidden rounded-2xl border border-pro-line bg-pro-surface">
-                        {categories.map((cat) => {
-                            const Icon = categoryIcon(cat.name);
-                            const skills = [...cat.skills].sort(
-                                (a, b) => (b.level ?? 0) - (a.level ?? 0),
-                            );
-
-                            return (
+                    <div className="flex flex-col gap-10">
+                        {categories
+                            .filter((cat) => cat.skills.length > 0)
+                            .map((cat) => (
                                 <div
                                     key={cat.id}
-                                    className="grid gap-4 px-5 py-5 md:grid-cols-[220px_minmax(0,1fr)] md:items-center md:gap-8 md:px-7"
+                                    className="flex flex-col gap-4 lg:grid lg:grid-cols-[160px_minmax(0,1fr)] lg:gap-8"
                                 >
-                                    <div className="flex items-center gap-3">
-                                        <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-pro-accent-soft text-pro-accent">
-                                            <Icon className="size-[18px]" />
-                                        </span>
-                                        <span className="font-semibold capitalize">
-                                            {cat.name}
-                                        </span>
-                                        <span className="text-sm text-pro-muted">
-                                            {cat.skills.length}
-                                        </span>
-                                    </div>
-                                    <ul className="flex flex-wrap gap-2">
-                                        {skills.length === 0 && (
-                                            <li className="text-sm text-pro-muted">
-                                                —
-                                            </li>
-                                        )}
-                                        {skills.map((s) => {
-                                            const level = levelLabel(s.level);
-
-                                            return (
+                                    <h3 className="text-xs font-semibold tracking-[0.14em] text-pro-muted uppercase lg:pt-3">
+                                        {cat.name}
+                                    </h3>
+                                    <ul className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
+                                        {[...cat.skills]
+                                            .sort(
+                                                (a, b) =>
+                                                    (b.level ?? 0) -
+                                                    (a.level ?? 0),
+                                            )
+                                            .map((s) => (
                                                 <li
                                                     key={s.id}
-                                                    title={level ?? undefined}
-                                                    className={cn(
-                                                        'rounded-full px-3.5 py-1.5 text-sm',
-                                                        skillTone(s.level).chip,
-                                                    )}
+                                                    className="flex flex-col items-center gap-2 rounded-2xl border border-pro-line bg-pro-surface px-2 py-4 text-center transition hover:-translate-y-0.5 hover:border-pro-accent/30 hover:shadow-[0_8px_24px_rgba(22,24,29,0.06)]"
                                                 >
-                                                    {s.name}
-                                                    {level && (
-                                                        <span className="sr-only">
-                                                            , {level}
+                                                    <TechIcon
+                                                        name={s.name}
+                                                        className="size-8"
+                                                    />
+                                                    <span className="text-sm leading-tight font-medium">
+                                                        {techLabel(s.name)}
+                                                    </span>
+                                                    {s.level !== null && (
+                                                        <span className="-mt-1 text-xs text-pro-muted">
+                                                            {levelLabel(
+                                                                s.level,
+                                                            )}
                                                         </span>
                                                     )}
                                                 </li>
-                                            );
-                                        })}
+                                            ))}
                                     </ul>
                                 </div>
-                            );
-                        })}
+                            ))}
                     </div>
                 )}
             </Section>
