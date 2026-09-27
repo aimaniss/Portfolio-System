@@ -192,3 +192,8 @@ export function projectsUrl(
 export function jobProjectsUrl(experienceId: number): string {
     return `/projects?experience=${experienceId}`;
 }
+
+/** "Copyright © 2026 Aiman Ismail. All rights reserved." (year is always current) */
+export function copyright(name: string): string {
+    return `Copyright © ${new Date().getFullYear()} ${name}. All rights reserved.`;
+}

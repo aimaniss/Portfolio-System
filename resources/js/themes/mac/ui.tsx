@@ -6,6 +6,7 @@ import { createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
 import { useFlashToast } from '@/hooks/use-flash-toast';
 import { cn } from '@/lib/utils';
+import { copyright } from '@/lib/portfolio';
 
 export function TrafficLights({ small = false }: { small?: boolean }) {
     const size = small ? 'size-2.5' : 'size-3';
@@ -69,8 +70,7 @@ export function MacShell({
                                 {status ?? '● online'}
                             </span>
                             <span>
-                                {owner &&
-                                    `© ${new Date().getFullYear()} ${owner} · `}
+                                {owner && `${copyright(owner)} · `}
                                 built with laravel + inertia
                             </span>
                         </div>

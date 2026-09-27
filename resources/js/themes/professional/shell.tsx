@@ -4,7 +4,7 @@ import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { useFlashToast } from '@/hooks/use-flash-toast';
 import { cn } from '@/lib/utils';
-import { useContactForm, year } from '@/lib/portfolio';
+import { copyright, useContactForm, year } from '@/lib/portfolio';
 import type { Profile, Project } from '@/types/portfolio';
 
 const sections = [
@@ -109,9 +109,7 @@ export function ProShell({
 
             <footer className="border-t border-pro-line">
                 <div className="mx-auto flex max-w-6xl flex-col gap-1 px-5 py-8 text-sm text-pro-muted sm:flex-row md:px-8">
-                    <span>
-                        © {new Date().getFullYear()} {name}
-                    </span>
+                    <span>{copyright(name)}</span>
                     <span className="flex-1" />
                     <a
                         href="#top"

@@ -1,7 +1,7 @@
 import { Link, router } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
-import { Markdown, year } from '@/lib/portfolio';
+import { copyright, Markdown, year } from '@/lib/portfolio';
 import type { ProjectShowProps } from '@/types/portfolio';
 import { MacShell, macBtnGhost, Placeholder, Prompt, shellUser } from './ui';
 
@@ -43,9 +43,7 @@ export default function MacProject({
                     <span className="font-extrabold">[portfolio]</span>
                     <span>1:less*</span>
                     <span className="flex-1" />
-                    <span className="truncate">
-                        © {new Date().getFullYear()} {profile.name}
-                    </span>
+                    <span className="truncate">{copyright(profile.name)}</span>
                 </div>
             }
         >

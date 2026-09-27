@@ -4,6 +4,7 @@ import { createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
 import { useFlashToast } from '@/hooks/use-flash-toast';
 import { cn } from '@/lib/utils';
+import { copyright } from '@/lib/portfolio';
 
 const PsUser = createContext('guest');
 
@@ -60,11 +61,7 @@ export function PsShell({
                     </main>
 
                     <div className="flex h-[30px] items-center gap-5 border-t border-ps-rule bg-ps-bar px-4 font-sans text-xs text-[#9d9d9d]">
-                        {owner && (
-                            <span>
-                                © {new Date().getFullYear()} {owner}
-                            </span>
-                        )}
+                        {owner && <span>{copyright(owner)}</span>}
                         <span className="flex-1" />
                         <span className="max-sm:hidden">
                             built with laravel + inertia
