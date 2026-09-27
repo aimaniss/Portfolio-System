@@ -211,6 +211,11 @@ export function ProProjectCard({ project }: { project: Project }) {
                         </span>
                     )}
                 </div>
+                {project.experience && (
+                    <div className="-mt-1 text-sm text-pro-accent">
+                        {project.experience.company}
+                    </div>
+                )}
                 {project.summary && (
                     <p className="text-[15px] leading-relaxed text-pro-soft">
                         {project.summary}

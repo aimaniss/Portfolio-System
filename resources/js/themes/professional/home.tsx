@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { monthYear } from '@/lib/portfolio';
+import { duration, monthYear } from '@/lib/portfolio';
 import type { HomeProps } from '@/types/portfolio';
 import {
     Empty,
@@ -203,6 +203,9 @@ export default function ProHome({
                                     {exp.end_date
                                         ? monthYear(exp.end_date)
                                         : 'Present'}
+                                    <div className="text-xs text-pro-muted/80">
+                                        {duration(exp.start_date, exp.end_date)}
+                                    </div>
                                 </div>
                                 <h3 className="text-lg font-semibold tracking-tight">
                                     {exp.position}{' '}
@@ -230,6 +233,26 @@ export default function ProHome({
                                         ))}
                                     </div>
                                 )}
+                                {!!exp.projects?.length && (
+                                    <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                                        {exp.projects.map((p) => (
+                                            <Link
+                                                key={p.id}
+                                                href={`/projects/${p.slug}`}
+                                                className="group flex flex-col rounded-xl border border-pro-line bg-pro-bg px-4 py-3 transition-colors hover:border-pro-accent"
+                                            >
+                                                <span className="text-sm font-medium group-hover:text-pro-accent">
+                                                    {p.title} →
+                                                </span>
+                                                {p.summary && (
+                                                    <span className="line-clamp-1 text-xs text-pro-muted">
+                                                        {p.summary}
+                                                    </span>
+                                                )}
+                                            </Link>
+                                        ))}
+                                    </div>
+                                )}
                             </li>
                         ))}
                     </ol>
@@ -238,8 +261,8 @@ export default function ProHome({
 
             <Section
                 id="projects"
-                eyebrow="Selected work"
-                title="Projects"
+                eyebrow="Side projects"
+                title="Personal projects"
                 aside={
                     <Link
                         href="/projects"

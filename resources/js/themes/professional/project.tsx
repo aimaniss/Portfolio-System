@@ -121,6 +121,23 @@ export default function ProProject({
                     </div>
 
                     <aside className="flex flex-col gap-5 self-start rounded-2xl border border-pro-line bg-pro-surface p-6">
+                        <div className="flex flex-col gap-1">
+                            <div className="text-xs font-semibold tracking-wider text-pro-muted uppercase">
+                                {project.experience ? 'Company' : 'Type'}
+                            </div>
+                            <div>
+                                {project.experience ? (
+                                    <>
+                                        {project.experience.company}
+                                        <span className="block text-sm text-pro-muted">
+                                            as {project.experience.position}
+                                        </span>
+                                    </>
+                                ) : (
+                                    'Personal project'
+                                )}
+                            </div>
+                        </div>
                         {project.role && (
                             <div className="flex flex-col gap-1">
                                 <div className="text-xs font-semibold tracking-wider text-pro-muted uppercase">
