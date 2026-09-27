@@ -4,9 +4,11 @@ namespace Database\Seeders;
 
 use App\Models\Profile;
 use App\Models\Project;
+use App\Models\Skill;
 use App\Models\SkillCategory;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,14 +18,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::query()->firstOrCreate(
-            ['email' => env('ADMIN_EMAIL', 'admin@example.com')],
-            [
-                'name' => env('ADMIN_NAME', 'Aiman Ismail'),
-                'password' => env('ADMIN_PASSWORD', 'password'),
+        $email = env('ADMIN_EMAIL', 'admin@example.com');
+
+        if (! User::query()->where('email', $email)->exists()) {
+            // Never fall back to a known password; generate one when .env has none.
+            $password = env('ADMIN_PASSWORD');
+
+            if (blank($password)) {
+                $password = Str::password(20);
+                $this->command?->warn("ADMIN_PASSWORD is not set. Generated admin password for {$email}: {$password}");
+            }
+
+            User::query()->create([
+                'email' => $email,
+                'name' => env('ADMIN_NAME', 'Admin'),
+                'password' => $password,
                 'email_verified_at' => now(),
-            ],
-        );
+            ]);
+        }
 
         Profile::query()->firstOrCreate([], [
             'name' => 'Aiman Ismail',
@@ -57,7 +69,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $project->skills()->syncWithoutDetaching(
-            \App\Models\Skill::query()->whereIn('name', ['laravel', 'react', 'inertia.js', 'mysql'])->pluck('id')
+            Skill::query()->whereIn('name', ['laravel', 'react', 'inertia.js', 'mysql'])->pluck('id')
         );
     }
 }
