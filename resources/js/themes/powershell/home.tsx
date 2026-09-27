@@ -1,13 +1,12 @@
 import type { ReactNode } from 'react';
 import { Link } from '@inertiajs/react';
 import { cn } from '@/lib/utils';
-import { ym } from '@/lib/portfolio';
-import type { HomeProps } from '@/types/portfolio';
+import { levelBlocks, ym } from '@/lib/portfolio';
+import type { HomeProps, Skill } from '@/types/portfolio';
 import { PsContact, PsProjectCard } from './parts';
 import {
     Arg,
     Cmd,
-    PsChip,
     PsCursor,
     PsHead,
     PsList,
@@ -19,6 +18,37 @@ import {
     psLink,
     psUser,
 } from './ui';
+
+/** One Format-Table row: Category | Name | Level. */
+function PsSkillRow({ skill, category }: { skill: Skill; category: string }) {
+    const [filled, empty] =
+        skill.level === null ? ['', ''] : levelBlocks(skill.level);
+
+    return (
+        <>
+            <span className="text-white max-md:hidden">{category}</span>
+            <span className="min-w-0 truncate text-ps-chip-text max-md:pl-3">
+                {skill.name}
+            </span>
+            {skill.level === null ? (
+                <span className="text-ps-muted">-</span>
+            ) : (
+                <span
+                    className="flex items-center gap-2 whitespace-nowrap"
+                    title={`${skill.level}%`}
+                >
+                    <span className="tracking-[-0.05em]">
+                        <span className="text-ps-accent">{filled}</span>
+                        <span className="text-ps-line">{empty}</span>
+                    </span>
+                    <span className="w-9 text-right text-ps-muted">
+                        {skill.level}%
+                    </span>
+                </span>
+            )}
+        </>
+    );
+}
 
 export default function PsHome({
     profile,
@@ -134,24 +164,40 @@ export default function PsHome({
                         {`Get-ChildItem: Cannot find path 'C:\\Users\\${user}\\skills' because it does not exist.`}
                     </PsNotFound>
                 ) : (
-                    <div className="grid grid-cols-[minmax(84px,auto)_minmax(0,1fr)] gap-x-4 gap-y-2.5 md:grid-cols-[180px_minmax(0,1fr)] md:gap-x-6">
-                        <span className="text-ps-green">Category</span>
+                    <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1.5 md:grid-cols-[160px_minmax(0,240px)_auto] md:gap-x-6">
+                        <span className="text-ps-green max-md:hidden">
+                            Category
+                        </span>
                         <span className="text-ps-green">Name</span>
-                        <span className="text-ps-green">--------</span>
+                        <span className="text-ps-green">Level</span>
+                        <span className="text-ps-green max-md:hidden">
+                            --------
+                        </span>
                         <span className="text-ps-green">----</span>
+                        <span className="text-ps-green">-----</span>
                         {categories.map((cat) => (
                             <div key={cat.id} className="contents">
-                                <span className="text-white">{cat.name}</span>
-                                <div className="flex flex-wrap gap-2">
-                                    {cat.skills.length === 0 && (
+                                <span className="col-span-2 mt-2 text-white md:hidden">
+                                    {cat.name}
+                                </span>
+                                {cat.skills.length === 0 && (
+                                    <>
+                                        <span className="text-white max-md:hidden">
+                                            {cat.name}
+                                        </span>
                                         <span className="text-ps-muted">
                                             {'{}'}
                                         </span>
-                                    )}
-                                    {cat.skills.map((s) => (
-                                        <PsChip key={s.id}>{s.name}</PsChip>
-                                    ))}
-                                </div>
+                                        <span />
+                                    </>
+                                )}
+                                {cat.skills.map((s, i) => (
+                                    <PsSkillRow
+                                        key={s.id}
+                                        skill={s}
+                                        category={i === 0 ? cat.name : ''}
+                                    />
+                                ))}
                             </div>
                         ))}
                     </div>
