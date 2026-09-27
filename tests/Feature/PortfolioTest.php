@@ -28,7 +28,7 @@ class PortfolioTest extends TestCase
         $this->get('/')->assertInertia(fn (Assert $page) => $page
             ->component('public/home')
             ->where('theme', 'mac')
-            ->has('categories', 4)
+            ->has('categories', 5)
             ->has('projects', 1));
 
         Profile::current()->update(['theme' => 'powershell']);

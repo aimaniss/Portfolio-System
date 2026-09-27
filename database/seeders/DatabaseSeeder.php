@@ -43,18 +43,21 @@ class DatabaseSeeder extends Seeder
             'bio' => 'Building web apps and systems end to end — Laravel, React and Node on the front of it, Docker and CI/CD pipelines behind it. Currently going deep on infrastructure.',
         ]);
 
+        // name => proficiency (0-100). Tune these from the admin panel.
         $skills = [
-            'frontend' => ['react', 'react-native', 'inertia.js', 'blade'],
-            'backend' => ['laravel', 'node.js'],
-            'database' => ['mysql', 'mariadb', 'postgresql'],
-            'devops' => ['docker', 'jenkins', 'github-actions', 'uptime-kuma'],
+            'languages' => ['php' => 85, 'javascript' => 80, 'typescript' => 70],
+            'frontend' => ['react' => 80, 'react-native' => 65, 'inertia.js' => 80, 'blade' => 85],
+            'backend' => ['laravel' => 90, 'node.js' => 70],
+            'database' => ['mysql' => 85, 'mariadb' => 75, 'postgresql' => 65],
+            'devops' => ['docker' => 75, 'jenkins' => 60, 'github-actions' => 70, 'uptime-kuma' => 65],
         ];
 
         $order = 0;
-        foreach ($skills as $category => $names) {
+        foreach ($skills as $category => $levels) {
             $cat = SkillCategory::query()->firstOrCreate(['name' => $category], ['sort_order' => $order++]);
-            foreach ($names as $i => $name) {
-                $cat->skills()->firstOrCreate(['name' => $name], ['sort_order' => $i]);
+            $i = 0;
+            foreach ($levels as $name => $level) {
+                $cat->skills()->firstOrCreate(['name' => $name], ['level' => $level, 'sort_order' => $i++]);
             }
         }
 
