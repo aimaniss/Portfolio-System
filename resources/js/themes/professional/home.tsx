@@ -1,13 +1,15 @@
 import { Link } from '@inertiajs/react';
-import { Download, Github, Linkedin, MapPin } from 'lucide-react';
+import { ChevronDown, Download, Github, Linkedin, MapPin } from 'lucide-react';
+import { useState } from 'react';
 import {
     duration,
     jobProjectsUrl,
     levelLabel,
     monthYear,
 } from '@/lib/portfolio';
-import { TechIcon, techLabel } from '@/lib/tech-icons';
-import type { HomeProps } from '@/types/portfolio';
+import { TechIcon, techIcon, techLabel } from '@/lib/tech-icons';
+import { cn } from '@/lib/utils';
+import type { HomeProps, Skill } from '@/types/portfolio';
 import {
     Empty,
     ProContact,
@@ -50,6 +52,33 @@ function heroFacts(
 const socialPill =
     'inline-flex items-center gap-2 rounded-full border border-pro-line bg-pro-surface px-4 py-2.5 text-[15px] font-medium text-pro-soft transition-colors hover:border-pro-muted hover:text-pro-ink';
 
+/**
+ * One tile per logo for the compact view: skills that share a logo
+ * (Laravel + Blade, React + React Native) are merged into one tooltip.
+ */
+function groupByLogo(skills: Skill[]) {
+    const tiles = new Map<
+        string,
+        { key: string; skill: Skill; label: string }
+    >();
+
+    for (const s of skills) {
+        const key = techIcon(s.name)?.slug ?? `skill-${s.id}`;
+        const text = [techLabel(s.name), levelLabel(s.level)]
+            .filter(Boolean)
+            .join(' · ');
+        const tile = tiles.get(key);
+
+        if (tile) {
+            tile.label += `, ${text}`;
+        } else {
+            tiles.set(key, { key, skill: s, label: text });
+        }
+    }
+
+    return [...tiles.values()];
+}
+
 function initials(name: string): string {
     return name
         .split(/\s+/)
@@ -66,6 +95,11 @@ export default function ProHome({
     projectCount,
 }: Omit<HomeProps, 'theme'>) {
     const facts = heroFacts(experiences, projectCount, categories);
+    const [skillsOpen, setSkillsOpen] = useState(false);
+    const allSkills = categories
+        .flatMap((c) => c.skills)
+        .sort((a, b) => (b.level ?? 0) - (a.level ?? 0));
+    const logoTiles = groupByLogo(allSkills);
 
     return (
         <ProShell name={profile.name} onHome>
@@ -175,9 +209,55 @@ export default function ProHome({
                 </div>
             </section>
 
-            <Section id="skills" eyebrow="Toolkit" title="Skills & tools">
+            <Section
+                id="skills"
+                eyebrow="Toolkit"
+                title="Skills & tools"
+                aside={
+                    allSkills.length > 0 && (
+                        <button
+                            type="button"
+                            onClick={() => setSkillsOpen((o) => !o)}
+                            aria-expanded={skillsOpen}
+                            className="inline-flex items-center gap-1.5 rounded-full border border-pro-line bg-pro-surface px-4 py-2 text-sm font-medium text-pro-soft transition-colors hover:border-pro-muted hover:text-pro-ink"
+                        >
+                            {skillsOpen ? 'Show less' : 'Show details'}
+                            <ChevronDown
+                                className={cn(
+                                    'size-4 transition-transform',
+                                    skillsOpen && 'rotate-180',
+                                )}
+                            />
+                        </button>
+                    )
+                }
+            >
                 {categories.length === 0 ? (
                     <Empty>Skills will appear here soon.</Empty>
+                ) : !skillsOpen ? (
+                    <ul className="flex flex-wrap gap-2.5">
+                        {logoTiles.map(({ key, skill: s, label }) => {
+                            return (
+                                <li
+                                    key={key}
+                                    title={label}
+                                    className="group relative flex size-12 items-center justify-center rounded-xl border border-pro-line bg-pro-surface transition hover:-translate-y-0.5 hover:border-pro-accent/30 hover:shadow-[0_6px_18px_rgba(22,24,29,0.08)] md:size-14"
+                                >
+                                    <TechIcon
+                                        name={s.name}
+                                        className="size-6 md:size-7"
+                                    />
+                                    <span className="sr-only">{label}</span>
+                                    <span
+                                        aria-hidden
+                                        className="pointer-events-none absolute -top-9 left-1/2 z-10 -translate-x-1/2 rounded-md bg-pro-ink px-2 py-1 text-xs whitespace-nowrap text-white opacity-0 transition-opacity group-hover:opacity-100"
+                                    >
+                                        {label}
+                                    </span>
+                                </li>
+                            );
+                        })}
+                    </ul>
                 ) : (
                     <div className="flex flex-col gap-7">
                         {categories
