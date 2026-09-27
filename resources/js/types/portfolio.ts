@@ -38,8 +38,10 @@ export type Experience = {
     end_date: string | null;
     description: string | null;
     skills: Skill[];
-    /** Published work projects built in this role (public pages). */
+    /** A preview of the published work projects built in this role (home page). */
     projects?: Pick<Project, 'id' | 'title' | 'slug' | 'summary'>[];
+    /** All published projects for this job (home page). */
+    published_projects_count?: number;
     /** Admin list only. */
     projects_count?: number;
 };
@@ -106,6 +108,8 @@ export type ProjectsProps = {
     skills: string[];
     activeSkill: string | null;
     activeType: 'personal' | 'work' | null;
+    /** Set when listing one job's projects (?experience=id). */
+    activeExperience: ProjectCompany | null;
 };
 
 export type ProjectShowProps = {

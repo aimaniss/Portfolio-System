@@ -14,15 +14,20 @@ use Inertia\Response;
 
 class PortfolioController extends Controller
 {
+    /** Projects previewed under each job on the home page. */
+    private const PROJECTS_PER_JOB = 2;
+
     public function home(Request $request): Response
     {
         return Inertia::render('public/home', [
             'theme' => $this->theme($request),
             'profile' => Profile::current(),
             'categories' => SkillCategory::query()->with('skills')->orderBy('sort_order')->get(),
-            // Work projects are listed under the job they were built at.
+            // Each job previews a few of its projects; "view all" opens /projects?experience=id.
             'experiences' => Experience::query()
-                ->with(['skills', 'projects' => fn ($q) => $q->published()->ordered()->select(['id', 'experience_id', 'title', 'slug', 'summary'])])
+                ->with(['skills', 'projects' => fn ($q) => $q->published()->ordered()
+                    ->select(['id', 'experience_id', 'title', 'slug', 'summary'])->limit(self::PROJECTS_PER_JOB)])
+                ->withCount(['projects as published_projects_count' => fn ($q) => $q->published()])
                 ->orderByDesc('start_date')->get(),
             // The projects section shows personal work only.
             'projects' => Project::query()->published()->personal()->where('is_featured', true)
@@ -35,11 +40,15 @@ class PortfolioController extends Controller
     {
         $skill = $request->string('skill')->toString();
         $type = in_array($request->query('type'), ['personal', 'work'], true) ? $request->query('type') : null;
+        $experience = $request->integer('experience')
+            ? Experience::query()->find($request->integer('experience'), ['id', 'company', 'position'])
+            : null;
 
         $projects = Project::query()->published()
             ->when($skill !== '', fn ($q) => $q->whereHas('skills', fn ($s) => $s->where('name', $skill)))
             ->when($type === 'personal', fn ($q) => $q->personal())
             ->when($type === 'work', fn ($q) => $q->work())
+            ->when($experience, fn ($q) => $q->where('experience_id', $experience->id))
             ->with(['cover', 'skills', 'experience:id,company,position'])->ordered()->get();
 
         return Inertia::render('public/projects/index', [
@@ -50,6 +59,7 @@ class PortfolioController extends Controller
                 ->flatMap->skills->pluck('name')->values(),
             'activeSkill' => $skill ?: null,
             'activeType' => $type,
+            'activeExperience' => $experience,
         ]);
     }
 

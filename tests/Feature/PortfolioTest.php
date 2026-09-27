@@ -36,7 +36,7 @@ class PortfolioTest extends TestCase
         $this->seed();
 
         $this->assertSame(3, Experience::count());
-        $this->assertSame(3, Project::query()->work()->count());
+        $this->assertSame(4, Project::query()->work()->count());
         $this->assertSame(1, Experience::whereNull('end_date')->count());
     }
 
@@ -105,6 +105,29 @@ class PortfolioTest extends TestCase
         // Deleting the job keeps the project, now as a personal one.
         $job->delete();
         $this->assertNull(Project::where('slug', 'billing-api')->value('experience_id'));
+    }
+
+    public function test_home_previews_two_projects_per_job_and_links_to_the_rest()
+    {
+        $job = Experience::create(['company' => 'Acme', 'position' => 'Engineer', 'start_date' => '2024-01-01']);
+        foreach (['one', 'two', 'three', 'four'] as $i => $slug) {
+            Project::create([
+                'experience_id' => $job->id, 'title' => $slug, 'slug' => $slug,
+                'is_published' => $i < 3, 'sort_order' => $i,
+            ]);
+        }
+
+        $this->get('/')->assertInertia(fn (Assert $page) => $page
+            ->has('experiences.0.projects', 2)
+            ->where('experiences.0.published_projects_count', 3));
+
+        $this->get("/projects?experience={$job->id}")->assertInertia(fn (Assert $page) => $page
+            ->has('projects', 3)
+            ->where('activeExperience.company', 'Acme'));
+
+        $this->get('/projects?experience=999')->assertInertia(fn (Assert $page) => $page
+            ->where('activeExperience', null)
+            ->has('projects', 4));
     }
 
     public function test_admin_can_file_a_project_under_a_job()
