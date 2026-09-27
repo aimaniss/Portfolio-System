@@ -182,7 +182,7 @@ export function ProProjectCard({ project }: { project: Project }) {
             href={`/projects/${project.slug}`}
             className="group flex flex-col overflow-hidden rounded-2xl border border-pro-line bg-pro-surface transition hover:-translate-y-0.5 hover:shadow-[0_12px_32px_rgba(22,24,29,0.08)]"
         >
-            {project.cover ? (
+            {project.experience_id ? null : project.cover ? (
                 <img
                     src={project.cover.url}
                     alt={project.title}

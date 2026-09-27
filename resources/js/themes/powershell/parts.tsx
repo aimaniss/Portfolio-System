@@ -10,7 +10,7 @@ export function PsProjectCard({ project }: { project: Project }) {
             href={`/projects/${project.slug}`}
             className="group flex flex-col overflow-hidden rounded-md border border-ps-rule bg-ps-panel text-ps-text transition-colors hover:border-ps-line"
         >
-            {project.cover ? (
+            {project.experience_id ? null : project.cover ? (
                 <img
                     src={project.cover.url}
                     alt={project.title}

@@ -22,7 +22,7 @@ export function ProjectCard({ project }: { project: Project }) {
             href={`/projects/${project.slug}`}
             className="group flex flex-col overflow-hidden rounded-[10px] border border-mac-rule bg-mac-panel text-mac-text transition-colors hover:border-mac-line"
         >
-            {project.cover ? (
+            {project.experience_id ? null : project.cover ? (
                 <img
                     src={project.cover.url}
                     alt={project.title}
