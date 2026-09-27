@@ -24,6 +24,7 @@ class SkillController extends Controller
         $data = $request->validate([
             'skill_category_id' => ['required', 'exists:skill_categories,id'],
             'name' => ['required', 'string', 'max:50'],
+            'level' => ['nullable', 'integer', 'min:0', 'max:100'],
         ]);
 
         $data['sort_order'] = Skill::where('skill_category_id', $data['skill_category_id'])->max('sort_order') + 1;
@@ -37,6 +38,7 @@ class SkillController extends Controller
         $skill->update($request->validate([
             'skill_category_id' => ['required', 'exists:skill_categories,id'],
             'name' => ['required', 'string', 'max:50'],
+            'level' => ['nullable', 'integer', 'min:0', 'max:100'],
         ]));
 
         return back();

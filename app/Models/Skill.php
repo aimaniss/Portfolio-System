@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Skill extends Model
 {
-    protected $fillable = ['skill_category_id', 'name', 'sort_order'];
+    protected $fillable = ['skill_category_id', 'name', 'level', 'sort_order'];
 
     public function category(): BelongsTo
     {
