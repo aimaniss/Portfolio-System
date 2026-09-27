@@ -47,6 +47,9 @@ function heroFacts(
     return facts;
 }
 
+const socialPill =
+    'inline-flex items-center gap-2 rounded-full border border-pro-line bg-pro-surface px-4 py-2.5 text-[15px] font-medium text-pro-soft transition-colors hover:border-pro-muted hover:text-pro-ink';
+
 function initials(name: string): string {
     return name
         .split(/\s+/)
@@ -71,22 +74,22 @@ export default function ProHome({
                 id="about"
                 className="scroll-mt-20 border-b border-pro-line bg-pro-surface"
             >
-                <div className="mx-auto flex max-w-6xl items-start gap-4 px-5 py-8 sm:gap-8 md:px-8 md:py-12">
+                <div className="mx-auto flex max-w-6xl items-start gap-4 px-5 py-8 sm:gap-7 md:px-8 md:py-12">
                     {profile.avatar_url ? (
                         <img
                             src={profile.avatar_url}
                             alt={profile.name}
-                            className="size-16 shrink-0 rounded-2xl object-cover shadow-[0_8px_24px_rgba(22,24,29,0.10)] ring-4 ring-pro-bg sm:size-24 md:size-32"
+                            className="size-16 shrink-0 rounded-2xl object-cover shadow-[0_8px_24px_rgba(22,24,29,0.10)] ring-4 ring-pro-bg sm:size-24 md:size-28"
                         />
                     ) : (
-                        <div className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-pro-accent-soft to-pro-bg text-xl font-semibold text-pro-accent ring-1 ring-pro-line sm:size-24 sm:text-2xl md:size-32 md:text-4xl">
+                        <div className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-pro-accent to-indigo-400 text-xl font-semibold text-white shadow-[0_8px_24px_rgba(36,71,214,0.25)] sm:size-24 sm:text-2xl md:size-28 md:text-3xl">
                             {initials(profile.name)}
                         </div>
                     )}
 
-                    <div className="flex min-w-0 flex-1 flex-col gap-3">
-                        <div className="flex flex-col gap-1">
-                            <h1 className="text-2xl leading-tight font-semibold tracking-tight sm:text-3xl md:text-4xl">
+                    <div className="flex min-w-0 flex-1 flex-col gap-4">
+                        <div className="flex flex-col gap-1.5">
+                            <h1 className="text-2xl leading-tight font-semibold tracking-tight sm:text-3xl md:text-[34px]">
                                 {profile.name}
                             </h1>
                             {profile.headline && (
@@ -94,31 +97,43 @@ export default function ProHome({
                                     {profile.headline}
                                 </p>
                             )}
+                            {(profile.location || facts.length > 0) && (
+                                <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-pro-muted">
+                                    {profile.location && (
+                                        <span className="inline-flex items-center gap-1">
+                                            <MapPin className="size-3.5" />
+                                            {profile.location}
+                                        </span>
+                                    )}
+                                    {facts.map(([value, label], i) => (
+                                        <span
+                                            key={label}
+                                            className="inline-flex items-center gap-2"
+                                        >
+                                            {(i > 0 || profile.location) && (
+                                                <span className="text-pro-line">
+                                                    •
+                                                </span>
+                                            )}
+                                            <span>
+                                                <span className="font-semibold text-pro-ink">
+                                                    {value}
+                                                </span>{' '}
+                                                {label.toLowerCase()}
+                                            </span>
+                                        </span>
+                                    ))}
+                                </div>
+                            )}
                         </div>
+
                         {profile.bio && (
-                            <p className="max-w-2xl text-[15px] leading-relaxed whitespace-pre-line text-pro-muted">
+                            <p className="max-w-2xl text-[15px] leading-relaxed whitespace-pre-line text-pro-soft">
                                 {profile.bio}
                             </p>
                         )}
-                        {(profile.location || facts.length > 0) && (
-                            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-pro-muted">
-                                {profile.location && (
-                                    <span className="inline-flex items-center gap-1.5">
-                                        <MapPin className="size-3.5" />
-                                        {profile.location}
-                                    </span>
-                                )}
-                                {facts.map(([value, label]) => (
-                                    <span key={label}>
-                                        <span className="font-semibold text-pro-ink">
-                                            {value}
-                                        </span>{' '}
-                                        {label.toLowerCase()}
-                                    </span>
-                                ))}
-                            </div>
-                        )}
-                        <div className="mt-1 flex flex-wrap items-center gap-2.5">
+
+                        <div className="flex flex-wrap items-center gap-2">
                             <a href="#contact" className={proBtnPrimary}>
                                 Get in touch
                             </a>
@@ -138,10 +153,10 @@ export default function ProHome({
                                     href={profile.github_url}
                                     target="_blank"
                                     rel="noreferrer"
-                                    aria-label="GitHub"
-                                    className="flex size-10 items-center justify-center rounded-full text-pro-soft hover:bg-pro-bg hover:text-pro-ink"
+                                    className={socialPill}
                                 >
-                                    <Github className="size-5" />
+                                    <Github className="size-4" />
+                                    GitHub
                                 </a>
                             )}
                             {profile.linkedin_url && (
@@ -149,10 +164,10 @@ export default function ProHome({
                                     href={profile.linkedin_url}
                                     target="_blank"
                                     rel="noreferrer"
-                                    aria-label="LinkedIn"
-                                    className="flex size-10 items-center justify-center rounded-full text-pro-soft hover:bg-pro-bg hover:text-pro-ink"
+                                    className={socialPill}
                                 >
-                                    <Linkedin className="size-5" />
+                                    <Linkedin className="size-4" />
+                                    LinkedIn
                                 </a>
                             )}
                         </div>
