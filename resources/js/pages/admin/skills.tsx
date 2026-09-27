@@ -2,6 +2,7 @@ import { router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import AdminLayout from '@/layouts/admin-layout';
+import { levelLabel, SKILL_LEVELS } from '@/lib/portfolio';
 import { cn } from '@/lib/utils';
 import {
     btnSmallGhost,
@@ -18,7 +19,7 @@ import type { Skill, SkillCategory } from '@/types/portfolio';
 const smallInput = cn(macInput, 'py-1.5 text-[13px]');
 const opts = { preserveScroll: true };
 
-/** Optional 0-100 proficiency; blank hides the bar on the site. */
+/** Optional proficiency tier; blank shows no level on the site. */
 function LevelInput({
     value,
     onChange,
@@ -27,20 +28,19 @@ function LevelInput({
     onChange: (value: string) => void;
 }) {
     return (
-        <label className="flex shrink-0 items-center gap-1 text-[13px] text-mac-muted">
-            <input
-                type="number"
-                min={0}
-                max={100}
-                step={5}
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
-                placeholder="lvl"
-                aria-label="Level (0-100)"
-                className={cn(smallInput, 'w-16 px-2')}
-            />
-            %
-        </label>
+        <select
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            aria-label="Level"
+            className={cn(smallInput, 'w-auto shrink-0 pr-7')}
+        >
+            <option value="">no level</option>
+            {Object.entries(SKILL_LEVELS).map(([v, label]) => (
+                <option key={v} value={v}>
+                    {label.toLowerCase()}
+                </option>
+            ))}
+        </select>
     );
 }
 
@@ -132,8 +132,8 @@ function SkillChip({
             >
                 {skill.name}
                 {skill.level !== null && (
-                    <span className="ml-1.5 text-mac-green">
-                        {skill.level}%
+                    <span className="ml-1.5 text-mac-muted">
+                        · {levelLabel(skill.level)?.toLowerCase()}
                     </span>
                 )}
             </button>
@@ -332,8 +332,8 @@ export default function Skills({
             </form>
 
             <div className="text-xs text-mac-muted">
-                # click a skill to rename, move or set its level (0-100%) · ×
-                deletes it
+                # click a skill to rename, move it or set its level · × deletes
+                it
             </div>
 
             {categories.length === 0 ? (
