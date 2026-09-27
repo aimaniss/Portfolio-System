@@ -38,7 +38,15 @@ export type Experience = {
     end_date: string | null;
     description: string | null;
     skills: Skill[];
+    /** Published work projects built in this role (public pages). */
+    projects?: Pick<Project, 'id' | 'title' | 'slug' | 'summary'>[];
+    /** Admin list only. */
+    projects_count?: number;
 };
+
+/** The job a work project belongs to. */
+export type ProjectCompany = Pick<Experience, 'id' | 'company' | 'position'> &
+    Partial<Pick<Experience, 'start_date' | 'end_date'>>;
 
 export type ProjectImage = {
     id: number;
@@ -52,6 +60,9 @@ export type ProjectImage = {
 
 export type Project = {
     id: number;
+    /** null = personal project. */
+    experience_id: number | null;
+    experience?: ProjectCompany | null;
     title: string;
     slug: string;
     summary: string | null;
@@ -92,6 +103,7 @@ export type ProjectsProps = {
     projects: Project[];
     skills: string[];
     activeSkill: string | null;
+    activeType: 'personal' | 'work' | null;
 };
 
 export type ProjectShowProps = {
