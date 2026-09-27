@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Admin dashboard</title>
+    </head>
+    <body>
+        <style>
+            @font-face {
+                font-family: 'JetBrains Mono';
+                font-weight: 400;
+                src: local('x') format('woff2');
+            }
+            @font-face {
+                font-family: 'JetBrains Mono';
+                font-weight: 500;
+                src: local('x') format('woff2');
+            }
+            @font-face {
+                font-family: 'JetBrains Mono';
+                font-weight: 700;
+                src: local('x') format('woff2');
+            }
+            @font-face {
+                font-family: 'JetBrains Mono';
+                font-weight: 800;
+                src: local('x') format('woff2');
+            }
+            body {
+                margin: 0;
+                font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+                background: #101216;
+                color: #d6d9de;
+            }
+            a {
+                color: #79c0ff;
+                text-decoration: none;
+            }
+            a:hover {
+                color: #a5d6ff;
+                text-decoration: underline;
+            }
+        </style>
+
+        <div
+            style="
+                width: 1440px;
+                height: 860px;
+                box-sizing: border-box;
+                padding: 56px 80px;
+                background: #101216;
+                font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+                color: #d6d9de;
+            "
+        >
+            <div
+                style="
+                    display: flex;
+                    flex-direction: column;
+                    height: 100%;
+                    background: #1c1e22;
+                    border: 1px solid #3a3d44;
+                    border-radius: 12px;
+                    overflow: hidden;
+                    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+                "
+            >
+                <div
+                    style="
+                        display: flex;
+                        align-items: center;
+                        gap: 16px;
+                        height: 44px;
+                        padding: 0 16px;
+                        background: #2a2c31;
+                        border-bottom: 1px solid #3a3d44;
+                    "
+                >
+                    <div style="display: flex; gap: 8px">
+                        <span
+                            style="
+                                width: 12px;
+                                height: 12px;
+                                border-radius: 50%;
+                                background: #ff5f57;
+                            "
+                        ></span>
+                        <span
+                            style="
+                                width: 12px;
+                                height: 12px;
+                                border-radius: 50%;
+                                background: #febc2e;
+                            "
+                        ></span>
+                        <span
+                            style="
+                                width: 12px;
+                                height: 12px;
+                                border-radius: 50%;
+                                background: #28c840;
+                            "
+                        ></span>
+                    </div>
+                    <div
+                        style="
+                            flex-grow: 1;
+                            text-align: center;
+                            font-size: 13px;
+                            color: #a3aab4;
+                        "
+                    >
+                        admin@portfolio — ~/admin
+                    </div>
+                    <div style="width: 52px"></div>
+                </div>
+
+                <div style="flex-grow: 1; display: flex; min-height: 0">
+                    <!-- sidebar -->
+                    <aside
+                        style="
+                            width: 240px;
+                            flex-shrink: 0;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 4px;
+                            padding: 24px 14px;
+                            background: #191b1f;
+                            border-right: 1px solid #2e3137;
+                            font-size: 14px;
+                        "
+                    >
+                        <div
+                            style="
+                                padding: 0 12px 12px;
+                                font-size: 12px;
+                                color: #8b929c;
+                            "
+                        >
+                            ~/admin/
+                        </div>
+                        <a
+                            href="Admin.dc.html"
+                            style="
+                                padding: 9px 12px;
+                                border-radius: 6px;
+                                background: #25282d;
+                                color: #f0f2f5;
+                            "
+                            ><span style="color: #7ee787">▸</span> dashboard</a
+                        >
+                        <a
+                            href="#"
+                            style="
+                                padding: 9px 12px;
+                                border-radius: 6px;
+                                color: #b9bfc8;
+                            "
+                            ><span style="color: #5f6670">▸</span> profile</a
+                        >
+                        <a
+                            href="#"
+                            style="
+                                padding: 9px 12px;
+                                border-radius: 6px;
+                                color: #b9bfc8;
+                            "
+                            ><span style="color: #5f6670">▸</span> skills</a
+                        >
+                        <a
+                            href="#"
+                            style="
+                                padding: 9px 12px;
+                                border-radius: 6px;
+                                color: #b9bfc8;
+                            "
+                            ><span style="color: #5f6670">▸</span>
+                            experiences</a
+                        >
+                        <a
+                            href="AdminProject.dc.html"
+                            style="
+                                padding: 9px 12px;
+                                border-radius: 6px;
+                                color: #b9bfc8;
+                            "
+                            ><span style="color: #5f6670">▸</span> projects</a
+                        >
+                        <a
+                            href="#"
+                            style="
+                                padding: 9px 12px;
+                                border-radius: 6px;
+                                color: #b9bfc8;
+                            "
+                            ><span style="color: #5f6670">▸</span> messages</a
+                        >
+                        <div style="flex-grow: 1"></div>
+                        <a
+                            href="Main.dc.html"
+                            style="padding: 9px 12px; color: #b9bfc8"
+                            >view site ↗</a
+                        >
+                        <a
+                            href="Login.dc.html"
+                            style="padding: 9px 12px; color: #ff7b72"
+                            >exit (logout)</a
+                        >
+                    </aside>
+
+                    <!-- main -->
+                    <main
+                        style="
+                            flex-grow: 1;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 28px;
+                            padding: 32px 40px;
+                            font-size: 14px;
+                            line-height: 1.6;
+                        "
+                    >
+                        <div
+                            style="
+                                display: flex;
+                                align-items: center;
+                                gap: 16px;
+                                padding-bottom: 14px;
+                                border-bottom: 1px solid #2e3137;
+                            "
+                        >
+                            <div style="font-size: 15px">
+                                <span style="color: #7ee787"
+                                    >admin@portfolio</span
+                                >
+                                <span style="color: #79c0ff">~/admin</span>
+                                <span style="color: #8b929c">%</span> status
+                            </div>
+                            <span style="flex-grow: 1"></span>
+                            <a
+                                href="AdminProject.dc.html"
+                                style="
+                                    padding: 8px 14px;
+                                    background: #7ee787;
+                                    color: #101216;
+                                    border-radius: 6px;
+                                    font-weight: 700;
+                                "
+                                >+ new project</a
+                            >
+                            <a
+                                href="#"
+                                style="
+                                    padding: 8px 14px;
+                                    border: 1px solid #3a3d44;
+                                    color: #d6d9de;
+                                    border-radius: 6px;
+                                "
+                                >+ experience</a
+                            >
+                            <a
+                                href="#"
+                                style="
+                                    padding: 8px 14px;
+                                    border: 1px solid #3a3d44;
+                                    color: #d6d9de;
+                                    border-radius: 6px;
+                                "
+                                >+ skill</a
+                            >
+                        </div>
+
+                        <div
+                            style="
+                                display: grid;
+                                grid-template-columns: repeat(
+                                    4,
+                                    minmax(0, 1fr)
+                                );
+                                gap: 16px;
+                            "
+                        >
+                            <div
+                                style="
+                                    display: flex;
+                                    flex-direction: column;
+                                    gap: 4px;
+                                    padding: 18px 20px;
+                                    border: 1px solid #2e3137;
+                                    border-radius: 10px;
+                                    background: #202226;
+                                "
+                            >
+                                <div style="font-size: 12px; color: #8b929c">
+                                    projects
+                                </div>
+                                <div
+                                    style="
+                                        font-size: 32px;
+                                        font-weight: 800;
+                                        color: #f0f2f5;
+                                    "
+                                >
+                                    [n]
+                                </div>
+                                <div style="font-size: 12px; color: #8b929c">
+                                    [n] published · [n] draft
+                                </div>
+                            </div>
+                            <div
+                                style="
+                                    display: flex;
+                                    flex-direction: column;
+                                    gap: 4px;
+                                    padding: 18px 20px;
+                                    border: 1px solid #2e3137;
+                                    border-radius: 10px;
+                                    background: #202226;
+                                "
+                            >
+                                <div style="font-size: 12px; color: #8b929c">
+                                    skills
+                                </div>
+                                <div
+                                    style="
+                                        font-size: 32px;
+                                        font-weight: 800;
+                                        color: #f0f2f5;
+                                    "
+                                >
+                                    13
+                                </div>
+                                <div style="font-size: 12px; color: #8b929c">
+                                    4 categories
+                                </div>
+                            </div>
+                            <div
+                                style="
+                                    display: flex;
+                                    flex-direction: column;
+                                    gap: 4px;
+                                    padding: 18px 20px;
+                                    border: 1px solid #2e3137;
+                                    border-radius: 10px;
+                                    background: #202226;
+                                "
+                            >
+                                <div style="font-size: 12px; color: #8b929c">
+                                    experiences
+                                </div>
+                                <div
+                                    style="
+                                        font-size: 32px;
+                                        font-weight: 800;
+                                        color: #f0f2f5;
+                                    "
+                                >
+                                    [n]
+                                </div>
+                                <div style="font-size: 12px; color: #8b929c">
+                                    1 current
+                                </div>
+                            </div>
+                            <div
+                                style="
+                                    display: flex;
+                                    flex-direction: column;
+                                    gap: 4px;
+                                    padding: 18px 20px;
+                                    border: 1px solid #2e3137;
+                                    border-radius: 10px;
+                                    background: #202226;
+                                "
+                            >
+                                <div style="font-size: 12px; color: #8b929c">
+                                    messages
+                                </div>
+                                <div
+                                    style="
+                                        font-size: 32px;
+                                        font-weight: 800;
+                                        color: #e3b341;
+                                    "
+                                >
+                                    [n]
+                                </div>
+                                <div style="font-size: 12px; color: #8b929c">
+                                    unread
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            style="
+                                display: grid;
+                                grid-template-columns: minmax(0, 2fr) minmax(
+                                        0,
+                                        1fr
+                                    );
+                                gap: 24px;
+                            "
+                        >
+                            <!-- projects table -->
+                            <div
+                                style="
+                                    display: flex;
+                                    flex-direction: column;
+                                    border: 1px solid #2e3137;
+                                    border-radius: 10px;
+                                    background: #202226;
+                                    overflow: hidden;
+                                "
+                            >
+                                <div
+                                    style="
+                                        display: flex;
+                                        align-items: center;
+                                        padding: 14px 20px;
+                                        border-bottom: 1px solid #2e3137;
+                                    "
+                                >
+                                    <span style="color: #8b929c"
+                                        >$ ls -lt projects/</span
+                                    ><span style="flex-grow: 1"></span
+                                    ><a href="#" style="font-size: 13px"
+                                        >all →</a
+                                    >
+                                </div>
+                                <div
+                                    style="
+                                        display: grid;
+                                        grid-template-columns:
+                                            minmax(0, 1.6fr)
+                                            minmax(0, 1.4fr) 110px 110px;
+                                        gap: 12px;
+                                        padding: 10px 20px;
+                                        font-size: 12px;
+                                        color: #8b929c;
+                                        border-bottom: 1px solid #2e3137;
+                                    "
+                                >
+                                    <span>name</span><span>stack</span
+                                    ><span>status</span
+                                    ><span style="text-align: right"
+                                        >actions</span
+                                    >
+                                </div>
+                                <div
+                                    style="
+                                        display: grid;
+                                        grid-template-columns:
+                                            minmax(0, 1.6fr)
+                                            minmax(0, 1.4fr) 110px 110px;
+                                        gap: 12px;
+                                        align-items: center;
+                                        padding: 14px 20px;
+                                        border-bottom: 1px solid #2e3137;
+                                    "
+                                >
+                                    <span
+                                        style="color: #79c0ff; font-weight: 700"
+                                        >portfolio-cms/</span
+                                    >
+                                    <span
+                                        style="color: #a3aab4; font-size: 13px"
+                                        >laravel, react, mysql</span
+                                    >
+                                    <span
+                                        style="color: #7ee787; font-size: 13px"
+                                        >● published</span
+                                    >
+                                    <span
+                                        style="
+                                            display: flex;
+                                            gap: 12px;
+                                            justify-content: flex-end;
+                                            font-size: 13px;
+                                        "
+                                        ><a href="AdminProject.dc.html">edit</a
+                                        ><a href="#" style="color: #ff7b72"
+                                            >rm</a
+                                        ></span
+                                    >
+                                </div>
+                                <div
+                                    style="
+                                        display: grid;
+                                        grid-template-columns:
+                                            minmax(0, 1.6fr)
+                                            minmax(0, 1.4fr) 110px 110px;
+                                        gap: 12px;
+                                        align-items: center;
+                                        padding: 14px 20px;
+                                        border-bottom: 1px solid #2e3137;
+                                    "
+                                >
+                                    <span
+                                        style="color: #79c0ff; font-weight: 700"
+                                        >[project-name]/</span
+                                    >
+                                    <span
+                                        style="color: #a3aab4; font-size: 13px"
+                                        >react-native, node.js</span
+                                    >
+                                    <span
+                                        style="color: #8b929c; font-size: 13px"
+                                        >○ draft</span
+                                    >
+                                    <span
+                                        style="
+                                            display: flex;
+                                            gap: 12px;
+                                            justify-content: flex-end;
+                                            font-size: 13px;
+                                        "
+                                        ><a href="AdminProject.dc.html">edit</a
+                                        ><a href="#" style="color: #ff7b72"
+                                            >rm</a
+                                        ></span
+                                    >
+                                </div>
+                                <div
+                                    style="
+                                        display: grid;
+                                        grid-template-columns:
+                                            minmax(0, 1.6fr)
+                                            minmax(0, 1.4fr) 110px 110px;
+                                        gap: 12px;
+                                        align-items: center;
+                                        padding: 14px 20px;
+                                    "
+                                >
+                                    <span
+                                        style="color: #79c0ff; font-weight: 700"
+                                        >[project-name]/</span
+                                    >
+                                    <span
+                                        style="color: #a3aab4; font-size: 13px"
+                                        >docker, jenkins</span
+                                    >
+                                    <span
+                                        style="color: #7ee787; font-size: 13px"
+                                        >● published</span
+                                    >
+                                    <span
+                                        style="
+                                            display: flex;
+                                            gap: 12px;
+                                            justify-content: flex-end;
+                                            font-size: 13px;
+                                        "
+                                        ><a href="AdminProject.dc.html">edit</a
+                                        ><a href="#" style="color: #ff7b72"
+                                            >rm</a
+                                        ></span
+                                    >
+                                </div>
+                            </div>
+
+                            <!-- messages -->
+                            <div
+                                style="
+                                    display: flex;
+                                    flex-direction: column;
+                                    border: 1px solid #2e3137;
+                                    border-radius: 10px;
+                                    background: #202226;
+                                    overflow: hidden;
+                                "
+                            >
+                                <div
+                                    style="
+                                        display: flex;
+                                        align-items: center;
+                                        padding: 14px 20px;
+                                        border-bottom: 1px solid #2e3137;
+                                    "
+                                >
+                                    <span style="color: #8b929c"
+                                        >$ tail messages.log</span
+                                    ><span style="flex-grow: 1"></span
+                                    ><a href="#" style="font-size: 13px"
+                                        >inbox →</a
+                                    >
+                                </div>
+                                <div
+                                    style="
+                                        display: flex;
+                                        flex-direction: column;
+                                        gap: 2px;
+                                        padding: 14px 20px;
+                                        border-bottom: 1px solid #2e3137;
+                                    "
+                                >
+                                    <div
+                                        style="
+                                            display: flex;
+                                            gap: 8px;
+                                            font-size: 13px;
+                                        "
+                                    >
+                                        <span style="color: #e3b341">●</span
+                                        ><span
+                                            style="
+                                                color: #f0f2f5;
+                                                font-weight: 700;
+                                            "
+                                            >[Sender name]</span
+                                        >
+                                    </div>
+                                    <div
+                                        style="font-size: 13px; color: #a3aab4"
+                                    >
+                                        [First line of the message…]
+                                    </div>
+                                </div>
+                                <div
+                                    style="
+                                        display: flex;
+                                        flex-direction: column;
+                                        gap: 2px;
+                                        padding: 14px 20px;
+                                        border-bottom: 1px solid #2e3137;
+                                    "
+                                >
+                                    <div
+                                        style="
+                                            display: flex;
+                                            gap: 8px;
+                                            font-size: 13px;
+                                        "
+                                    >
+                                        <span style="color: #e3b341">●</span
+                                        ><span
+                                            style="
+                                                color: #f0f2f5;
+                                                font-weight: 700;
+                                            "
+                                            >[Sender name]</span
+                                        >
+                                    </div>
+                                    <div
+                                        style="font-size: 13px; color: #a3aab4"
+                                    >
+                                        [First line of the message…]
+                                    </div>
+                                </div>
+                                <div
+                                    style="
+                                        display: flex;
+                                        flex-direction: column;
+                                        gap: 2px;
+                                        padding: 14px 20px;
+                                    "
+                                >
+                                    <div
+                                        style="
+                                            display: flex;
+                                            gap: 8px;
+                                            font-size: 13px;
+                                        "
+                                    >
+                                        <span style="color: #5f6670">○</span
+                                        ><span style="color: #b9bfc8"
+                                            >[Sender name]</span
+                                        >
+                                    </div>
+                                    <div
+                                        style="font-size: 13px; color: #8b929c"
+                                    >
+                                        [First line of the message…]
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+
+                <div
+                    style="
+                        display: flex;
+                        align-items: center;
+                        gap: 20px;
+                        height: 32px;
+                        padding: 0 16px;
+                        background: #2a2c31;
+                        border-top: 1px solid #3a3d44;
+                        color: #8b929c;
+                        font-size: 12px;
+                    "
+                >
+                    <span style="color: #7ee787">● logged in as admin</span>
+                    <span style="flex-grow: 1"></span>
+                    <span>last deploy: [date]</span>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
