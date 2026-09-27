@@ -180,13 +180,23 @@ export function ProProjectCard({ project }: { project: Project }) {
             href={`/projects/${project.slug}`}
             className="group flex flex-col overflow-hidden rounded-2xl border border-pro-line bg-pro-surface transition hover:-translate-y-0.5 hover:shadow-[0_12px_32px_rgba(22,24,29,0.08)]"
         >
-            {!project.experience_id && project.cover && (
+            {project.experience_id ? null : project.cover ? (
                 <img
                     src={project.cover.url}
                     alt={project.title}
                     loading="lazy"
                     className="aspect-[16/10] w-full bg-pro-line/40 object-cover"
                 />
+            ) : (
+                <div className="relative flex aspect-[16/10] items-end overflow-hidden bg-gradient-to-br from-pro-accent-soft via-pro-surface to-pro-bg p-5">
+                    <div
+                        aria-hidden
+                        className="absolute inset-0 bg-[radial-gradient(var(--color-pro-line)_1px,transparent_1px)] [background-size:16px_16px] opacity-70"
+                    />
+                    <span className="relative text-2xl leading-tight font-semibold tracking-tight text-pro-accent/80">
+                        {project.title}
+                    </span>
+                </div>
             )}
             <div className="flex flex-1 flex-col gap-2 p-5">
                 <div className="flex items-baseline gap-3">
