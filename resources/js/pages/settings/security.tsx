@@ -1,16 +1,16 @@
-import { Form, Head } from '@inertiajs/react';
+import { Form } from '@inertiajs/react';
 import { useRef } from 'react';
 import SecurityController from '@/actions/App/Http/Controllers/Settings/SecurityController';
-import Heading from '@/components/heading';
-import InputError from '@/components/input-error';
-import PasswordInput from '@/components/password-input';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { edit } from '@/routes/security';
-import type { Props as ManagePasskeysProps } from '@/components/manage-passkeys';
 import ManagePasskeys from '@/components/manage-passkeys';
-import type { Props as ManageTwoFactorProps } from '@/components/manage-two-factor';
+import type { Props as ManagePasskeysProps } from '@/components/manage-passkeys';
 import ManageTwoFactor from '@/components/manage-two-factor';
+import type { Props as ManageTwoFactorProps } from '@/components/manage-two-factor';
+import SettingsTabs from '@/components/settings-tabs';
+import AdminLayout from '@/layouts/admin-layout';
+import { useTerm } from '@/lib/skin';
+import { cn } from '@/lib/utils';
+import { Field, Panel } from '@/themes/mac/admin-ui';
+import { macBtnPrimary, macInput } from '@/themes/mac/ui';
 
 // oxfmt-ignore
 type Props = {
@@ -18,131 +18,142 @@ type Props = {
 } & ManagePasskeysProps &
     ManageTwoFactorProps;
 
-export default function Security(props: Props) {
+export default function SecuritySettings(props: Props) {
+    const term = useTerm();
     const passwordInput = useRef<HTMLInputElement>(null);
     const currentPasswordInput = useRef<HTMLInputElement>(null);
 
     return (
-        <>
-            <Head title="Security settings" />
+        <AdminLayout
+            title="Security settings"
+            cwd="~/admin/settings"
+            command="passwd"
+        >
+            <SettingsTabs />
 
-            <h1 className="sr-only">Security settings</h1>
+            <div className="flex max-w-2xl flex-col gap-5">
+                <Panel head="$ passwd # change password" plain="Password">
+                    <Form
+                        {...SecurityController.update.form()}
+                        options={{ preserveScroll: true }}
+                        resetOnError={[
+                            'password',
+                            'password_confirmation',
+                            'current_password',
+                        ]}
+                        resetOnSuccess
+                        onError={(errors) => {
+                            if (errors.password) {
+                                passwordInput.current?.focus();
+                            }
 
-            <div className="space-y-6">
-                <Heading
-                    variant="small"
-                    title="Update password"
-                    description="Ensure your account is using a long, random password to stay secure"
-                />
-
-                <Form
-                    {...SecurityController.update.form()}
-                    options={{
-                        preserveScroll: true,
-                    }}
-                    resetOnError={[
-                        'password',
-                        'password_confirmation',
-                        'current_password',
-                    ]}
-                    resetOnSuccess
-                    onError={(errors) => {
-                        if (errors.password) {
-                            passwordInput.current?.focus();
-                        }
-
-                        if (errors.current_password) {
-                            currentPasswordInput.current?.focus();
-                        }
-                    }}
-                    className="space-y-6"
-                >
-                    {({ errors, processing }) => (
-                        <>
-                            <div className="grid gap-2">
-                                <Label htmlFor="current_password">
-                                    Current password
-                                </Label>
-
-                                <PasswordInput
-                                    id="current_password"
-                                    ref={currentPasswordInput}
-                                    name="current_password"
-                                    className="mt-1 block w-full"
-                                    autoComplete="current-password"
-                                    placeholder="Current password"
-                                />
-
-                                <InputError message={errors.current_password} />
-                            </div>
-
-                            <div className="grid gap-2">
-                                <Label htmlFor="password">New password</Label>
-
-                                <PasswordInput
-                                    id="password"
-                                    ref={passwordInput}
-                                    name="password"
-                                    className="mt-1 block w-full"
-                                    autoComplete="new-password"
-                                    placeholder="New password"
-                                    passwordrules={props.passwordRules}
-                                />
-
-                                <InputError message={errors.password} />
-                            </div>
-
-                            <div className="grid gap-2">
-                                <Label htmlFor="password_confirmation">
-                                    Confirm password
-                                </Label>
-
-                                <PasswordInput
-                                    id="password_confirmation"
-                                    name="password_confirmation"
-                                    className="mt-1 block w-full"
-                                    autoComplete="new-password"
-                                    placeholder="Confirm password"
-                                    passwordrules={props.passwordRules}
-                                />
-
-                                <InputError
-                                    message={errors.password_confirmation}
-                                />
-                            </div>
-
-                            <div className="flex items-center gap-4">
-                                <Button
-                                    disabled={processing}
-                                    data-test="update-password-button"
+                            if (errors.current_password) {
+                                currentPasswordInput.current?.focus();
+                            }
+                        }}
+                        className="flex flex-col gap-4.5 p-4 md:p-5"
+                    >
+                        {({ errors, processing }) => (
+                            <>
+                                <p className="text-[13px] text-mac-muted">
+                                    {term(
+                                        '# use a long, random password',
+                                        'Use a long, random password to keep the admin secure.',
+                                    )}
+                                </p>
+                                <Field
+                                    label="current_password"
+                                    htmlFor="current_password"
+                                    error={errors.current_password}
                                 >
-                                    Save
-                                </Button>
-                            </div>
-                        </>
-                    )}
-                </Form>
+                                    <input
+                                        id="current_password"
+                                        ref={currentPasswordInput}
+                                        name="current_password"
+                                        type="password"
+                                        autoComplete="current-password"
+                                        className={macInput}
+                                    />
+                                </Field>
+                                <div className="grid gap-4 sm:grid-cols-2">
+                                    <Field
+                                        label="new_password"
+                                        htmlFor="password"
+                                        error={errors.password}
+                                    >
+                                        <input
+                                            id="password"
+                                            ref={passwordInput}
+                                            name="password"
+                                            type="password"
+                                            autoComplete="new-password"
+                                            {...{
+                                                passwordrules:
+                                                    props.passwordRules,
+                                            }}
+                                            className={macInput}
+                                        />
+                                    </Field>
+                                    <Field
+                                        label="confirm_password"
+                                        htmlFor="password_confirmation"
+                                        error={errors.password_confirmation}
+                                    >
+                                        <input
+                                            id="password_confirmation"
+                                            name="password_confirmation"
+                                            type="password"
+                                            autoComplete="new-password"
+                                            {...{
+                                                passwordrules:
+                                                    props.passwordRules,
+                                            }}
+                                            className={macInput}
+                                        />
+                                    </Field>
+                                </div>
+                                <div>
+                                    <button
+                                        type="submit"
+                                        disabled={processing}
+                                        data-test="update-password-button"
+                                        className={cn(
+                                            macBtnPrimary,
+                                            'w-full sm:w-auto',
+                                        )}
+                                    >
+                                        {processing
+                                            ? term('updating…', 'Updating…')
+                                            : term(
+                                                  'passwd --update',
+                                                  'Update password',
+                                              )}
+                                    </button>
+                                </div>
+                            </>
+                        )}
+                    </Form>
+                </Panel>
+
+                {props.canManageTwoFactor && (
+                    <Panel className="p-4 md:p-5">
+                        <ManageTwoFactor
+                            canManageTwoFactor={props.canManageTwoFactor}
+                            requiresConfirmation={props.requiresConfirmation}
+                            twoFactorEnabled={props.twoFactorEnabled}
+                        />
+                    </Panel>
+                )}
+
+                {props.canManagePasskeys && (
+                    <Panel className="p-4 md:p-5">
+                        <ManagePasskeys
+                            canManagePasskeys={props.canManagePasskeys}
+                            passkeys={props.passkeys}
+                        />
+                    </Panel>
+                )}
             </div>
-
-            <ManageTwoFactor
-                canManageTwoFactor={props.canManageTwoFactor}
-                requiresConfirmation={props.requiresConfirmation}
-                twoFactorEnabled={props.twoFactorEnabled}
-            />
-
-            <ManagePasskeys
-                canManagePasskeys={props.canManagePasskeys}
-                passkeys={props.passkeys}
-            />
-        </>
+        </AdminLayout>
     );
 }
-
-Security.layout = {
-    breadcrumbs: [
-        {
-            title: 'Security settings',
-            href: edit(),
-        },
-    ],
-};

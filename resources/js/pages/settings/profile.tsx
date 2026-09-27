@@ -1,105 +1,93 @@
-import { Form, Head, usePage } from '@inertiajs/react';
+import { Form, usePage } from '@inertiajs/react';
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
-import DeleteUser from '@/components/delete-user';
-import Heading from '@/components/heading';
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { edit } from '@/routes/profile';
+import SettingsTabs from '@/components/settings-tabs';
+import AdminLayout from '@/layouts/admin-layout';
+import { useTerm } from '@/lib/skin';
+import { cn } from '@/lib/utils';
+import { Field, Panel } from '@/themes/mac/admin-ui';
+import { macBtnPrimary, macInput } from '@/themes/mac/ui';
 import type { Auth } from '@/types';
 
-type PageProps = {
-    auth: Auth;
-};
-
-export default function Profile() {
-    const { auth } = usePage<PageProps>().props;
+/** The admin's login identity (not the public profile). */
+export default function AccountSettings() {
+    const { auth } = usePage<{ auth: Auth }>().props;
+    const term = useTerm();
 
     return (
-        <>
-            <Head title="Profile settings" />
+        <AdminLayout
+            title="Account settings"
+            cwd="~/admin/settings"
+            command="whoami --account"
+        >
+            <SettingsTabs />
 
-            <h1 className="sr-only">Profile settings</h1>
-
-            <div className="space-y-6">
-                <Heading
-                    variant="small"
-                    title="Profile"
-                    description="Update your name and email address"
-                />
-
+            <Panel
+                head="$ account # login name and email"
+                plain="Account"
+                className="max-w-2xl"
+            >
                 <Form
                     {...ProfileController.update.form()}
-                    options={{
-                        preserveScroll: true,
-                    }}
-                    className="space-y-6"
+                    options={{ preserveScroll: true }}
+                    className="flex flex-col gap-4.5 p-4 md:p-5"
                 >
                     {({ processing, errors }) => (
                         <>
-                            <div className="grid gap-2">
-                                <Label htmlFor="name">Name</Label>
-
-                                <Input
+                            <p className="text-[13px] text-mac-muted">
+                                {term(
+                                    '# used to sign in; the public profile lives under profile/',
+                                    'Used to sign in. Your public profile is edited under Profile.',
+                                )}
+                            </p>
+                            <Field
+                                label="name"
+                                htmlFor="name"
+                                error={errors.name}
+                            >
+                                <input
                                     id="name"
-                                    className="mt-1 block w-full"
-                                    defaultValue={auth.user.name}
                                     name="name"
+                                    defaultValue={auth.user.name}
                                     required
                                     autoComplete="name"
-                                    placeholder="Full name"
+                                    className={macInput}
                                 />
-
-                                <InputError
-                                    className="mt-2"
-                                    message={errors.name}
-                                />
-                            </div>
-
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
-
-                                <Input
+                            </Field>
+                            <Field
+                                label="email"
+                                hint={term('login email', 'used to sign in')}
+                                htmlFor="email"
+                                error={errors.email}
+                            >
+                                <input
                                     id="email"
-                                    type="email"
-                                    className="mt-1 block w-full"
-                                    defaultValue={auth.user.email}
                                     name="email"
+                                    type="email"
+                                    defaultValue={auth.user.email}
                                     required
                                     autoComplete="username"
-                                    placeholder="Email address"
+                                    className={macInput}
                                 />
-
-                                <InputError
-                                    className="mt-2"
-                                    message={errors.email}
-                                />
-                            </div>
-
-                            <div className="flex items-center gap-4">
-                                <Button
+                            </Field>
+                            <div>
+                                <button
+                                    type="submit"
                                     disabled={processing}
                                     data-test="update-profile-button"
+                                    className={cn(
+                                        macBtnPrimary,
+                                        'w-full sm:w-auto',
+                                    )}
                                 >
-                                    Save
-                                </Button>
+                                    {processing
+                                        ? term('saving…', 'Saving…')
+                                        : term(':w save', 'Save changes')}
+                                </button>
                             </div>
                         </>
                     )}
                 </Form>
-            </div>
-
-            <DeleteUser />
-        </>
+            </Panel>
+        </AdminLayout>
     );
 }
-
-Profile.layout = {
-    breadcrumbs: [
-        {
-            title: 'Profile settings',
-            href: edit(),
-        },
-    ],
-};

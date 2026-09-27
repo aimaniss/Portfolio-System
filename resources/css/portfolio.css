@@ -122,3 +122,32 @@
     --color-mac-amber: var(--color-pro-soft);
     --color-mac-red: #c9312a;
 }
+
+/*
+ * Starter-kit (shadcn) components used inside the admin: settings, 2FA,
+ * passkeys and the auth pages. Set on <html> so dialogs rendered in portals
+ * match too. :root.admin-ui outranks the kit's .dark palette.
+ */
+:root.admin-ui {
+    --font-sans: var(--font-mac);
+    --background: var(--color-mac-bg);
+    --foreground: var(--color-mac-text);
+    --card: var(--color-mac-panel);
+    --card-foreground: var(--color-mac-text);
+    --popover: var(--color-mac-panel);
+    --popover-foreground: var(--color-mac-text);
+    --primary: var(--color-mac-green);
+    --primary-foreground: var(--color-mac-desktop);
+    --secondary: var(--color-mac-chip);
+    --secondary-foreground: var(--color-mac-text);
+    --muted: var(--color-mac-chip);
+    --muted-foreground: var(--color-mac-muted);
+    --accent: var(--color-mac-chip);
+    --accent-foreground: var(--color-mac-bright);
+    --destructive: var(--color-mac-red);
+    --destructive-foreground: var(--color-mac-red);
+    --border: var(--color-mac-line);
+    --input: var(--color-mac-line);
+    --ring: var(--color-mac-green);
+    --radius: 0.5rem;
+}

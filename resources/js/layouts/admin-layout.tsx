@@ -18,7 +18,7 @@ import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { useCurrentUrl } from '@/hooks/use-current-url';
 import { useFlashToast } from '@/hooks/use-flash-toast';
-import { skinClass, useSkin } from '@/lib/skin';
+import { skinClass, useAdminChrome } from '@/lib/skin';
 import { cn } from '@/lib/utils';
 import { TrafficLights } from '@/themes/mac/ui';
 import type { Auth } from '@/types';
@@ -39,7 +39,7 @@ const nav: NavItem[] = [
     { href: '/admin/experiences', label: 'experiences', icon: Briefcase },
     { href: '/admin/projects', label: 'projects', icon: FolderGit2 },
     { href: '/admin/messages', label: 'messages', icon: Mail },
-    { href: '/settings/profile', label: 'settings', icon: Settings },
+    { href: '/settings', label: 'settings', icon: Settings },
 ];
 
 const tabs = [
@@ -183,7 +183,7 @@ export default function AdminLayout({
     children: ReactNode;
 }) {
     const { auth, unread } = usePage<{ auth: Auth; unread: number }>().props;
-    const skin = useSkin();
+    const skin = useAdminChrome();
     const pro = skin === 'professional';
     const isActive = useIsActive();
     const [menuOpen, setMenuOpen] = useState(false);
