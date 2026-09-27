@@ -1,0 +1,73 @@
+/* Portfolio theme tokens (macOS terminal, PowerShell, professional). */
+@theme {
+    --font-mac: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+    --font-ps: 'Cascadia Code', 'Cascadia Mono', Consolas, monospace;
+    --font-pro: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+
+    /* macOS terminal */
+    --color-mac-desktop: #101216;
+    --color-mac-bg: #1c1e22;
+    --color-mac-bar: #2a2c31;
+    --color-mac-side: #191b1f;
+    --color-mac-panel: #202226;
+    --color-mac-input: #15171b;
+    --color-mac-chip: #25282d;
+    --color-mac-shot: #2a2d33;
+    --color-mac-line: #3a3d44;
+    --color-mac-rule: #2e3137;
+    --color-mac-text: #d6d9de;
+    --color-mac-soft: #b9bfc8;
+    --color-mac-muted: #8b929c;
+    --color-mac-dim: #5f6670;
+    --color-mac-bright: #f0f2f5;
+    --color-mac-green: #7ee787;
+    --color-mac-blue: #79c0ff;
+    --color-mac-amber: #e3b341;
+    --color-mac-red: #ff7b72;
+
+    /* Windows Terminal / PowerShell */
+    --color-ps-desktop: #0b1220;
+    --color-ps-bg: #121212;
+    --color-ps-bar: #202020;
+    --color-ps-panel: #181818;
+    --color-ps-input: #1c1c1c;
+    --color-ps-shot: #232323;
+    --color-ps-line: #3a3a3a;
+    --color-ps-rule: #2a2a2a;
+    --color-ps-text: #cccccc;
+    --color-ps-soft: #b0b0b0;
+    --color-ps-muted: #8a8a8a;
+    --color-ps-cyan: #61d6d6;
+    --color-ps-yellow: #f9f1a5;
+    --color-ps-green: #16c60c;
+    --color-ps-accent: #4cc2ff;
+    --color-ps-accent-ink: #002033;
+    --color-ps-blue: #3b78ff;
+    --color-ps-chip: #1f2a33;
+    --color-ps-chip-text: #99ebff;
+
+    /* Professional */
+    --color-pro-bg: #f7f6f2;
+    --color-pro-surface: #ffffff;
+    --color-pro-ink: #16181d;
+    --color-pro-soft: #464b55;
+    --color-pro-muted: #666b75;
+    --color-pro-line: #e3e1da;
+    --color-pro-accent: #2447d6;
+    --color-pro-accent-soft: #eaeefc;
+}
+
+@keyframes term-blink {
+    0%,
+    49% {
+        opacity: 1;
+    }
+    50%,
+    100% {
+        opacity: 0;
+    }
+}
+
+@utility animate-blink {
+    animation: term-blink 1.1s steps(1) infinite;
+}

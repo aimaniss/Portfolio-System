@@ -13,6 +13,10 @@ void createInertiaApp({
     layout: (name) => {
         switch (true) {
             case name === 'welcome':
+            case name === 'auth/login':
+            case name.startsWith('public/'):
+            case name.startsWith('admin/'):
+                // These pages render their own terminal / theme shells.
                 return null;
             case name.startsWith('auth/'):
                 return AuthLayout;
