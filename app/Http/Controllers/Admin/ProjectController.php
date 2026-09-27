@@ -103,7 +103,7 @@ class ProjectController extends Controller
     {
         $request->merge(['slug' => Str::slug($request->input('slug') ?: $request->input('title'))]);
 
-        return $request->validate([
+        $data = $request->validate([
             'title' => ['required', 'string', 'max:150'],
             'slug' => ['required', 'string', 'max:160', Rule::unique('projects', 'slug')->ignore($project?->id)],
             'summary' => ['nullable', 'string', 'max:255'],
@@ -119,7 +119,11 @@ class ProjectController extends Controller
             'skill_ids.*' => ['integer', 'exists:skills,id'],
             'images' => ['array', 'max:12'],
             'images.*' => ['image', 'max:5120'],
-        ]) + ['sort_order' => 0];
+        ]);
+
+        $data['sort_order'] ??= 0;
+
+        return $data;
     }
 
     private function storeImages(Request $request, Project $project): void
