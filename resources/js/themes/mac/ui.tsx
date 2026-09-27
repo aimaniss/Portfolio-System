@@ -128,7 +128,7 @@ export function SectionHead({
 
 export function Chip({ children }: { children: ReactNode }) {
     return (
-        <span className="rounded bg-mac-chip px-2 py-0.5 text-xs text-[#a3aab4]">
+        <span className="rounded bg-mac-chip px-2 py-0.5 text-xs text-mac-soft">
             {children}
         </span>
     );

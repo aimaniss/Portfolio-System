@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Message;
+use App\Models\Profile;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -44,6 +45,8 @@ class HandleInertiaRequests extends Middleware
             ],
             // Unread inbox count for the admin sidebar badge.
             'unread' => fn () => $request->user() ? Message::whereNull('read_at')->count() : 0,
+            // Active theme; the admin panel and login page follow it too.
+            'skin' => fn () => in_array(Profile::current()->theme, Profile::THEMES, true) ? Profile::current()->theme : 'mac',
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }
