@@ -71,27 +71,54 @@ export default function ProHome({
                 id="about"
                 className="scroll-mt-20 border-b border-pro-line bg-pro-surface"
             >
-                <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 py-14 md:grid-cols-[minmax(0,1fr)_auto] md:gap-16 md:px-8 md:py-20">
-                    <div className="order-2 flex flex-col gap-5 md:order-1">
-                        <div className="flex flex-col gap-3">
-                            <p className="text-sm font-medium text-pro-accent">
-                                Hello, I'm
-                            </p>
-                            <h1 className="text-4xl leading-[1.08] font-semibold tracking-tight md:text-[52px]">
+                <div className="mx-auto flex max-w-6xl items-start gap-4 px-5 py-8 sm:gap-8 md:px-8 md:py-12">
+                    {profile.avatar_url ? (
+                        <img
+                            src={profile.avatar_url}
+                            alt={profile.name}
+                            className="size-16 shrink-0 rounded-2xl object-cover shadow-[0_8px_24px_rgba(22,24,29,0.10)] ring-4 ring-pro-bg sm:size-24 md:size-32"
+                        />
+                    ) : (
+                        <div className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-pro-accent-soft to-pro-bg text-xl font-semibold text-pro-accent ring-1 ring-pro-line sm:size-24 sm:text-2xl md:size-32 md:text-4xl">
+                            {initials(profile.name)}
+                        </div>
+                    )}
+
+                    <div className="flex min-w-0 flex-1 flex-col gap-3">
+                        <div className="flex flex-col gap-1">
+                            <h1 className="text-2xl leading-tight font-semibold tracking-tight sm:text-3xl md:text-4xl">
                                 {profile.name}
                             </h1>
                             {profile.headline && (
-                                <p className="text-lg text-pro-soft md:text-xl">
+                                <p className="text-sm font-medium text-pro-accent sm:text-base">
                                     {profile.headline}
                                 </p>
                             )}
                         </div>
                         {profile.bio && (
-                            <p className="max-w-xl leading-relaxed whitespace-pre-line text-pro-muted">
+                            <p className="max-w-2xl text-[15px] leading-relaxed whitespace-pre-line text-pro-muted">
                                 {profile.bio}
                             </p>
                         )}
-                        <div className="flex flex-wrap items-center gap-3">
+                        {(profile.location || facts.length > 0) && (
+                            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-pro-muted">
+                                {profile.location && (
+                                    <span className="inline-flex items-center gap-1.5">
+                                        <MapPin className="size-3.5" />
+                                        {profile.location}
+                                    </span>
+                                )}
+                                {facts.map(([value, label]) => (
+                                    <span key={label}>
+                                        <span className="font-semibold text-pro-ink">
+                                            {value}
+                                        </span>{' '}
+                                        {label.toLowerCase()}
+                                    </span>
+                                ))}
+                            </div>
+                        )}
+                        <div className="mt-1 flex flex-wrap items-center gap-2.5">
                             <a href="#contact" className={proBtnPrimary}>
                                 Get in touch
                             </a>
@@ -106,68 +133,29 @@ export default function ProHome({
                                     Résumé
                                 </a>
                             )}
-                            <div className="flex items-center gap-1">
-                                {profile.github_url && (
-                                    <a
-                                        href={profile.github_url}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        aria-label="GitHub"
-                                        className="flex size-10 items-center justify-center rounded-full text-pro-soft hover:bg-pro-bg hover:text-pro-ink"
-                                    >
-                                        <Github className="size-5" />
-                                    </a>
-                                )}
-                                {profile.linkedin_url && (
-                                    <a
-                                        href={profile.linkedin_url}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        aria-label="LinkedIn"
-                                        className="flex size-10 items-center justify-center rounded-full text-pro-soft hover:bg-pro-bg hover:text-pro-ink"
-                                    >
-                                        <Linkedin className="size-5" />
-                                    </a>
-                                )}
-                            </div>
+                            {profile.github_url && (
+                                <a
+                                    href={profile.github_url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    aria-label="GitHub"
+                                    className="flex size-10 items-center justify-center rounded-full text-pro-soft hover:bg-pro-bg hover:text-pro-ink"
+                                >
+                                    <Github className="size-5" />
+                                </a>
+                            )}
+                            {profile.linkedin_url && (
+                                <a
+                                    href={profile.linkedin_url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    aria-label="LinkedIn"
+                                    className="flex size-10 items-center justify-center rounded-full text-pro-soft hover:bg-pro-bg hover:text-pro-ink"
+                                >
+                                    <Linkedin className="size-5" />
+                                </a>
+                            )}
                         </div>
-                        {facts.length > 0 && (
-                            <dl className="mt-3 flex max-w-xl divide-x divide-pro-line border-t border-pro-line pt-5">
-                                {facts.map(([value, label]) => (
-                                    <div
-                                        key={label}
-                                        className="flex flex-1 flex-col gap-0.5 px-4 first:pl-0"
-                                    >
-                                        <dd className="text-2xl font-semibold tracking-tight">
-                                            {value}
-                                        </dd>
-                                        <dt className="text-xs text-pro-muted sm:text-sm">
-                                            {label}
-                                        </dt>
-                                    </div>
-                                ))}
-                            </dl>
-                        )}
-                    </div>
-
-                    <div className="order-1 flex flex-col items-start gap-3 md:order-2 md:items-center">
-                        {profile.avatar_url ? (
-                            <img
-                                src={profile.avatar_url}
-                                alt={profile.name}
-                                className="size-28 rounded-2xl object-cover shadow-[0_16px_40px_rgba(22,24,29,0.12)] ring-1 ring-pro-line md:size-56"
-                            />
-                        ) : (
-                            <div className="flex size-28 items-center justify-center rounded-2xl bg-pro-accent-soft text-3xl font-semibold text-pro-accent ring-1 ring-pro-line md:size-56 md:text-6xl">
-                                {initials(profile.name)}
-                            </div>
-                        )}
-                        {profile.location && (
-                            <span className="inline-flex items-center gap-1.5 text-sm text-pro-muted">
-                                <MapPin className="size-3.5" />
-                                {profile.location}
-                            </span>
-                        )}
                     </div>
                 </div>
             </section>
