@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Link } from '@inertiajs/react';
 import { cn } from '@/lib/utils';
-import { duration, levelBlocks, ym } from '@/lib/portfolio';
+import { duration, levelLabel, ym } from '@/lib/portfolio';
 import type { HomeProps, Skill } from '@/types/portfolio';
 import { PsContact, PsProjectCard } from './parts';
 import {
@@ -21,8 +21,7 @@ import {
 
 /** One Format-Table row: Category | Name | Level. */
 function PsSkillRow({ skill, category }: { skill: Skill; category: string }) {
-    const [filled, empty] =
-        skill.level === null ? ['', ''] : levelBlocks(skill.level);
+    const level = levelLabel(skill.level);
 
     return (
         <>
@@ -30,22 +29,17 @@ function PsSkillRow({ skill, category }: { skill: Skill; category: string }) {
             <span className="min-w-0 truncate text-ps-chip-text max-md:pl-3">
                 {skill.name}
             </span>
-            {skill.level === null ? (
-                <span className="text-ps-muted">-</span>
-            ) : (
-                <span
-                    className="flex items-center gap-2 whitespace-nowrap"
-                    title={`${skill.level}%`}
-                >
-                    <span className="tracking-[-0.05em]">
-                        <span className="text-ps-accent">{filled}</span>
-                        <span className="text-ps-line">{empty}</span>
-                    </span>
-                    <span className="w-9 text-right text-ps-muted">
-                        {skill.level}%
-                    </span>
-                </span>
-            )}
+            <span
+                className={
+                    skill.level === 4
+                        ? 'text-ps-green'
+                        : level
+                          ? 'text-ps-text'
+                          : 'text-ps-muted'
+                }
+            >
+                {level ?? '-'}
+            </span>
         </>
     );
 }

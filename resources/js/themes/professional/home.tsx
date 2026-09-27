@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
-import { duration, monthYear } from '@/lib/portfolio';
+import { duration, levelLabel, monthYear } from '@/lib/portfolio';
+import { cn } from '@/lib/utils';
 import type { HomeProps } from '@/types/portfolio';
 import {
     Empty,
@@ -130,36 +131,30 @@ export default function ProHome({
                                             —
                                         </span>
                                     )}
-                                    {rated.map((s) => (
-                                        <div
-                                            key={s.id}
-                                            className="flex flex-col gap-1.5"
-                                        >
-                                            <div className="flex items-baseline justify-between text-sm">
-                                                <span className="text-pro-soft">
-                                                    {s.name}
-                                                </span>
-                                                <span className="text-xs text-pro-muted tabular-nums">
-                                                    {s.level}%
-                                                </span>
-                                            </div>
-                                            <div
-                                                role="meter"
-                                                aria-label={s.name}
-                                                aria-valuenow={s.level ?? 0}
-                                                aria-valuemin={0}
-                                                aria-valuemax={100}
-                                                className="h-1.5 overflow-hidden rounded-full bg-pro-accent-soft"
-                                            >
-                                                <div
-                                                    className="h-full rounded-full bg-pro-accent"
-                                                    style={{
-                                                        width: `${s.level}%`,
-                                                    }}
-                                                />
-                                            </div>
-                                        </div>
-                                    ))}
+                                    {rated.length > 0 && (
+                                        <ul className="flex flex-col divide-y divide-pro-line/70">
+                                            {rated.map((s) => (
+                                                <li
+                                                    key={s.id}
+                                                    className="flex items-center justify-between gap-3 py-2 text-[15px] first:pt-0 last:pb-0"
+                                                >
+                                                    <span className="text-pro-ink">
+                                                        {s.name}
+                                                    </span>
+                                                    <span
+                                                        className={cn(
+                                                            'rounded-full px-2.5 py-0.5 text-xs font-medium',
+                                                            s.level === 4
+                                                                ? 'bg-pro-accent-soft text-pro-accent'
+                                                                : 'bg-pro-bg text-pro-muted',
+                                                        )}
+                                                    >
+                                                        {levelLabel(s.level)}
+                                                    </span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
                                     {plain.length > 0 && (
                                         <div className="flex flex-wrap gap-2">
                                             {plain.map((s) => (

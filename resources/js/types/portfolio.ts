@@ -18,7 +18,7 @@ export type Skill = {
     id: number;
     skill_category_id: number;
     name: string;
-    /** Proficiency 0-100; null hides the bar. */
+    /** 1 beginner … 4 expert; null shows no level. */
     level: number | null;
     sort_order: number;
 };

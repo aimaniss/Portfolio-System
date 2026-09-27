@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
-import { allSkillCount, duration, levelBlocks, ym } from '@/lib/portfolio';
+import { allSkillCount, duration, levelLabel, ym } from '@/lib/portfolio';
+import { cn } from '@/lib/utils';
 import type { HomeProps, Skill } from '@/types/portfolio';
 import { ContactBlock, ProjectCard, ShellError } from './parts';
 import {
@@ -24,29 +25,24 @@ function lastLogin(): string {
     return `${day} ${month} ${String(d.getDate()).padStart(2, ' ')} ${time}`;
 }
 
-/** "├─ laravel ········ █████████░ 90%" */
+/** "├─ laravel            expert" */
 function SkillLine({ skill, last }: { skill: Skill; last: boolean }) {
-    const [filled, empty] =
-        skill.level === null ? ['', ''] : levelBlocks(skill.level);
+    const level = levelLabel(skill.level);
 
     return (
-        <div className="flex items-center gap-2 text-mac-dim">
+        <div className="flex items-baseline gap-2 text-mac-dim">
             <span className="shrink-0">{last ? '└─' : '├─'}</span>
             <span className="min-w-0 flex-1 truncate text-mac-text">
                 {skill.name}
             </span>
-            {skill.level !== null && (
+            {level && (
                 <span
-                    className="flex shrink-0 items-center gap-2 text-xs md:text-[13px]"
-                    title={`${skill.level}%`}
+                    className={cn(
+                        'shrink-0 text-xs lowercase md:text-[13px]',
+                        skill.level === 4 ? 'text-mac-green' : 'text-mac-muted',
+                    )}
                 >
-                    <span className="tracking-[-0.05em]">
-                        <span className="text-mac-green">{filled}</span>
-                        <span className="text-mac-line">{empty}</span>
-                    </span>
-                    <span className="w-9 text-right text-mac-muted">
-                        {skill.level}%
-                    </span>
+                    {level}
                 </span>
             )}
         </div>

@@ -135,13 +135,16 @@ export function Markdown({
     return <>{blocks}</>;
 }
 
-/** 80 → "████████░░" (terminal-style proficiency bar). */
-export function levelBlocks(level: number, width = 10): [string, string] {
-    const filled = Math.round(
-        (Math.min(Math.max(level, 0), 100) / 100) * width,
-    );
+/** Skill proficiency tiers, stored as 1-4 on skills.level. */
+export const SKILL_LEVELS: Record<number, string> = {
+    4: 'Expert',
+    3: 'Advanced',
+    2: 'Intermediate',
+    1: 'Beginner',
+};
 
-    return ['█'.repeat(filled), '░'.repeat(width - filled)];
+export function levelLabel(level: number | null): string | null {
+    return level === null ? null : (SKILL_LEVELS[level] ?? null);
 }
 
 /** Length of a job, inclusive of both months: "2 yrs 3 mos". */
