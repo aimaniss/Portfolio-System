@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { ArrowRight, Download, Github, Linkedin, MapPin } from 'lucide-react';
+import { Download, Github, Linkedin, MapPin } from 'lucide-react';
 import {
     duration,
     jobProjectsUrl,
@@ -32,7 +32,7 @@ function heroFacts(
         const years = Math.floor(
             (Date.now() - Math.min(...starts)) / (365.25 * 24 * 3600 * 1000),
         );
-        facts.push([years < 1 ? '<1' : `${years}+`, 'Years experience']);
+        facts.push([years < 1 ? '<1' : `${years}+`, 'years experience']);
     }
 
     if (projectCount) {
@@ -70,108 +70,94 @@ export default function ProHome({
             {/* hero */}
             <section
                 id="about"
-                className="relative scroll-mt-20 overflow-hidden border-b border-pro-line"
+                className="scroll-mt-20 border-b border-pro-line"
             >
-                <div
-                    aria-hidden
-                    className="pointer-events-none absolute inset-0 bg-[radial-gradient(56rem_28rem_at_90%_-10%,var(--color-pro-accent-soft),transparent_70%)]"
-                />
-                <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 md:grid-cols-[minmax(0,1fr)_auto] md:gap-16 md:px-8 md:py-28">
-                    <div className="flex flex-col gap-6">
-                        {profile.location && (
-                            <span className="inline-flex items-center gap-2 self-start rounded-full border border-pro-line bg-pro-surface px-3 py-1 text-sm text-pro-soft shadow-sm">
-                                <MapPin className="size-3.5 text-pro-muted" />
-                                {profile.location}
-                            </span>
-                        )}
-                        <div className="flex flex-col gap-4">
-                            <h1 className="text-[42px] leading-[1.02] font-semibold tracking-[-0.03em] md:text-7xl">
-                                {profile.name}
-                            </h1>
-                            {profile.headline && (
-                                <p className="text-lg font-medium text-pro-accent md:text-2xl">
-                                    {profile.headline}
-                                </p>
-                            )}
-                        </div>
-                        {profile.bio && (
-                            <p className="max-w-2xl text-base leading-relaxed whitespace-pre-line text-pro-soft md:text-lg">
-                                {profile.bio}
-                            </p>
-                        )}
-                        <div className="flex flex-wrap gap-3">
-                            <a href="#contact" className={proBtnPrimary}>
-                                Get in touch
-                                <ArrowRight className="ml-1.5 size-4" />
-                            </a>
-                            {profile.resume_url && (
-                                <a
-                                    href={profile.resume_url}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className={proBtnGhost}
-                                >
-                                    <Download className="mr-1.5 size-4" />
-                                    Résumé
-                                </a>
-                            )}
-                            {profile.github_url && (
-                                <a
-                                    href={profile.github_url}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    aria-label="GitHub"
-                                    className={cn(proBtnGhost, 'px-3')}
-                                >
-                                    <Github className="size-4" />
-                                </a>
-                            )}
-                            {profile.linkedin_url && (
-                                <a
-                                    href={profile.linkedin_url}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    aria-label="LinkedIn"
-                                    className={cn(proBtnGhost, 'px-3')}
-                                >
-                                    <Linkedin className="size-4" />
-                                </a>
-                            )}
-                        </div>
-                        {facts.length > 0 && (
-                            <dl className="mt-4 grid max-w-xl grid-cols-3 gap-6 border-t border-pro-line pt-6">
-                                {facts.map(([value, label]) => (
-                                    <div
-                                        key={label}
-                                        className="flex flex-col gap-1"
-                                    >
-                                        <dt className="order-2 text-sm text-pro-muted">
-                                            {label}
-                                        </dt>
-                                        <dd className="text-2xl font-semibold tracking-tight md:text-3xl">
-                                            {value}
-                                        </dd>
-                                    </div>
-                                ))}
-                            </dl>
-                        )}
-                    </div>
-
-                    <div className="relative order-first md:order-none">
-                        <div
-                            aria-hidden
-                            className="absolute -inset-3 -z-10 rotate-3 rounded-[2rem] bg-pro-accent-soft max-md:hidden"
-                        />
+                <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-12 md:px-8 md:py-16">
+                    <div className="flex items-center gap-4 md:gap-5">
                         {profile.avatar_url ? (
                             <img
                                 src={profile.avatar_url}
                                 alt={profile.name}
-                                className="size-28 rounded-3xl object-cover shadow-xl ring-1 ring-pro-line md:size-72"
+                                className="size-16 shrink-0 rounded-full object-cover ring-1 ring-pro-line md:size-20"
                             />
                         ) : (
-                            <div className="flex size-28 items-center justify-center rounded-3xl bg-gradient-to-br from-pro-accent to-indigo-400 text-3xl font-semibold text-white shadow-xl md:size-72 md:text-7xl">
+                            <div className="flex size-16 shrink-0 items-center justify-center rounded-full bg-pro-accent-soft text-lg font-semibold text-pro-accent md:size-20 md:text-xl">
                                 {initials(profile.name)}
                             </div>
+                        )}
+                        <div className="flex min-w-0 flex-col gap-1">
+                            <h1 className="text-3xl leading-tight font-semibold tracking-tight md:text-4xl">
+                                {profile.name}
+                            </h1>
+                            {profile.headline && (
+                                <p className="text-[15px] text-pro-soft md:text-base">
+                                    {profile.headline}
+                                </p>
+                            )}
+                        </div>
+                    </div>
+
+                    {profile.bio && (
+                        <p className="max-w-2xl leading-relaxed whitespace-pre-line text-pro-soft md:text-[17px]">
+                            {profile.bio}
+                        </p>
+                    )}
+
+                    {(profile.location || facts.length > 0) && (
+                        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-pro-muted">
+                            {profile.location && (
+                                <span className="inline-flex items-center gap-1.5">
+                                    <MapPin className="size-3.5" />
+                                    {profile.location}
+                                </span>
+                            )}
+                            {facts.map(([value, label]) => (
+                                <span key={label}>
+                                    <span className="font-semibold text-pro-ink">
+                                        {value}
+                                    </span>{' '}
+                                    {label.toLowerCase()}
+                                </span>
+                            ))}
+                        </div>
+                    )}
+
+                    <div className="flex flex-wrap gap-2.5">
+                        <a href="#contact" className={proBtnPrimary}>
+                            Get in touch
+                        </a>
+                        {profile.resume_url && (
+                            <a
+                                href={profile.resume_url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className={proBtnGhost}
+                            >
+                                <Download className="mr-1.5 size-4" />
+                                Résumé
+                            </a>
+                        )}
+                        {profile.github_url && (
+                            <a
+                                href={profile.github_url}
+                                target="_blank"
+                                rel="noreferrer"
+                                aria-label="GitHub"
+                                className={cn(proBtnGhost, 'px-3')}
+                            >
+                                <Github className="size-4" />
+                            </a>
+                        )}
+                        {profile.linkedin_url && (
+                            <a
+                                href={profile.linkedin_url}
+                                target="_blank"
+                                rel="noreferrer"
+                                aria-label="LinkedIn"
+                                className={cn(proBtnGhost, 'px-3')}
+                            >
+                                <Linkedin className="size-4" />
+                            </a>
                         )}
                     </div>
                 </div>
