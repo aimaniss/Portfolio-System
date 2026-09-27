@@ -29,6 +29,11 @@ export function PsProjectCard({ project }: { project: Project }) {
                 <div className="text-[15px] font-bold text-ps-blue group-hover:underline md:text-[17px]">
                     {project.slug}
                 </div>
+                {project.experience && (
+                    <div className="-mt-1 text-xs text-ps-yellow">
+                        Company: {project.experience.company}
+                    </div>
+                )}
                 {project.summary && (
                     <div className="text-[13px] text-ps-soft md:text-sm">
                         {project.summary}

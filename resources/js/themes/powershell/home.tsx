@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Link } from '@inertiajs/react';
 import { cn } from '@/lib/utils';
-import { levelBlocks, ym } from '@/lib/portfolio';
+import { duration, levelBlocks, ym } from '@/lib/portfolio';
 import type { HomeProps, Skill } from '@/types/portfolio';
 import { PsContact, PsProjectCard } from './parts';
 import {
@@ -242,6 +242,13 @@ export default function PsHome({
                                             </>,
                                         ],
                                         [
+                                            'Duration',
+                                            duration(
+                                                exp.start_date,
+                                                exp.end_date,
+                                            ),
+                                        ],
+                                        [
                                             'Position',
                                             <span
                                                 key="p"
@@ -280,6 +287,33 @@ export default function PsHome({
                                                   ],
                                               ] as [string, ReactNode][])
                                             : []),
+                                        ...(exp.projects?.length
+                                            ? ([
+                                                  [
+                                                      'Projects',
+                                                      <span key="pr">
+                                                          {exp.projects.map(
+                                                              (p, i) => (
+                                                                  <span
+                                                                      key={p.id}
+                                                                  >
+                                                                      {i > 0 &&
+                                                                          ', '}
+                                                                      <Link
+                                                                          href={`/projects/${p.slug}`}
+                                                                          className="text-ps-blue hover:underline"
+                                                                      >
+                                                                          {
+                                                                              p.slug
+                                                                          }
+                                                                      </Link>
+                                                                  </span>
+                                                              ),
+                                                          )}
+                                                      </span>,
+                                                  ],
+                                              ] as [string, ReactNode][])
+                                            : []),
                                     ]}
                                 />
                             </div>
@@ -292,7 +326,8 @@ export default function PsHome({
             <section className="flex flex-col gap-5">
                 <div className="flex items-baseline gap-4 border-b border-ps-rule pb-3">
                     <PsPrompt>
-                        <Cmd>Get-ChildItem</Cmd> .\projects <Arg>-Featured</Arg>
+                        <Cmd>Get-ChildItem</Cmd> .\projects\personal{' '}
+                        <Arg>-Featured</Arg>
                     </PsPrompt>
                     <span className="flex-1" />
                     <Link
@@ -306,7 +341,7 @@ export default function PsHome({
                     </Link>
                 </div>
                 <div className="text-xs whitespace-pre text-ps-muted md:text-[13px]">
-                    {'    '}Directory: C:\Users\{user}\projects
+                    {'    '}Directory: C:\Users\{user}\projects\personal
                 </div>
                 {projects.length === 0 ? (
                     <div className="text-ps-muted">(no featured projects)</div>

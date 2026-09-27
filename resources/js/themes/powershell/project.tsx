@@ -28,6 +28,20 @@ export default function PsProject({
 
     const rows: [string, ReactNode][] = [];
 
+    rows.push([
+        'Type',
+        project.experience ? (
+            <span key="t">
+                Work @{' '}
+                <Link href="/" className="text-ps-yellow hover:underline">
+                    {project.experience.company}
+                </Link>
+            </span>
+        ) : (
+            'Personal'
+        ),
+    ]);
+
     if (project.role) {
         rows.push(['Role', project.role]);
     }

@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
+import { projectsUrl } from '@/lib/portfolio';
 import { cn } from '@/lib/utils';
-import type { ProjectsProps } from '@/types/portfolio';
+import type { Project, ProjectsProps } from '@/types/portfolio';
 import { PsProjectCard } from './parts';
 import {
     Arg,
@@ -13,17 +14,51 @@ import {
     psUser,
 } from './ui';
 
+const types = [
+    [null, '*'],
+    ['personal', 'Personal'],
+    ['work', 'Work'],
+] as const;
+
+function Group({
+    user,
+    folder,
+    projects,
+}: {
+    user: string;
+    folder: string;
+    projects: Project[];
+}) {
+    if (projects.length === 0) {
+        return null;
+    }
+
+    return (
+        <div className="flex flex-col gap-4">
+            <div className="text-xs whitespace-pre text-ps-muted md:text-[13px]">
+                {'    '}Directory: C:\Users\{user}\projects\{folder}
+            </div>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {projects.map((p) => (
+                    <PsProjectCard key={p.id} project={p} />
+                ))}
+            </div>
+        </div>
+    );
+}
+
 export default function PsProjects({
     profile,
     projects,
     skills,
     activeSkill,
+    activeType,
 }: Omit<ProjectsProps, 'theme'>) {
     const user = psUser(profile.name);
-    const chip = (skill: string | null) =>
+    const chip = (active: boolean) =>
         cn(
             'rounded-[3px] px-2.5 py-px text-[13px]',
-            activeSkill === skill
+            active
                 ? 'bg-ps-accent text-ps-accent-ink'
                 : 'bg-ps-chip text-ps-chip-text hover:brightness-125',
         );
@@ -38,6 +73,7 @@ export default function PsProjects({
                     aside={`# ${projects.length} item${projects.length === 1 ? '' : 's'}`}
                 >
                     <Cmd>Get-ChildItem</Cmd> .\projects
+                    {activeType && `\\${activeType}`} <Arg>-Recurse</Arg>
                     {activeSkill && (
                         <>
                             {' '}
@@ -50,42 +86,62 @@ export default function PsProjects({
                     )}
                 </PsHead>
 
-                {skills.length > 0 && (
+                <div className="flex flex-col gap-2.5">
                     <div className="flex flex-wrap items-center gap-2">
-                        <span className="mr-1 text-[13px] text-ps-muted">
-                            -Stack
+                        <span className="mr-1 w-14 text-[13px] text-ps-muted">
+                            -Type
                         </span>
-                        <Link
-                            href="/projects"
-                            preserveScroll
-                            className={chip(null)}
-                        >
-                            *
-                        </Link>
-                        {skills.map((s) => (
+                        {types.map(([type, label]) => (
                             <Link
-                                key={s}
-                                href={`/projects?skill=${encodeURIComponent(s)}`}
+                                key={label}
+                                href={projectsUrl(activeSkill, type)}
                                 preserveScroll
-                                className={chip(s)}
+                                className={chip(activeType === type)}
                             >
-                                {s}
+                                {label}
                             </Link>
                         ))}
                     </div>
-                )}
-
-                <div className="text-xs whitespace-pre text-ps-muted md:text-[13px]">
-                    {'    '}Directory: C:\Users\{user}\projects
+                    {skills.length > 0 && (
+                        <div className="flex flex-wrap items-center gap-2">
+                            <span className="mr-1 w-14 text-[13px] text-ps-muted">
+                                -Stack
+                            </span>
+                            <Link
+                                href={projectsUrl(null, activeType)}
+                                preserveScroll
+                                className={chip(activeSkill === null)}
+                            >
+                                *
+                            </Link>
+                            {skills.map((s) => (
+                                <Link
+                                    key={s}
+                                    href={projectsUrl(s, activeType)}
+                                    preserveScroll
+                                    className={chip(activeSkill === s)}
+                                >
+                                    {s}
+                                </Link>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {projects.length === 0 ? (
                     <div className="text-ps-muted">(no items)</div>
                 ) : (
-                    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                        {projects.map((p) => (
-                            <PsProjectCard key={p.id} project={p} />
-                        ))}
+                    <div className="flex flex-col gap-8">
+                        <Group
+                            user={user}
+                            folder="personal"
+                            projects={projects.filter((p) => !p.experience_id)}
+                        />
+                        <Group
+                            user={user}
+                            folder="work"
+                            projects={projects.filter((p) => p.experience_id)}
+                        />
                     </div>
                 )}
             </section>
