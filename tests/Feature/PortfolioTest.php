@@ -23,6 +23,21 @@ class PortfolioTest extends TestCase
         parent::setUp();
 
         $this->seed();
+
+        // Start each test from the base data, without the sample work history.
+        $this->assertSame(3, Experience::count());
+        Project::query()->whereNotNull('experience_id')->delete();
+        Experience::query()->delete();
+    }
+
+    public function test_seeder_adds_sample_work_history_once()
+    {
+        $this->seed();
+        $this->seed();
+
+        $this->assertSame(3, Experience::count());
+        $this->assertSame(3, Project::query()->work()->count());
+        $this->assertSame(1, Experience::whereNull('end_date')->count());
     }
 
     public function test_home_renders_with_the_active_theme()
