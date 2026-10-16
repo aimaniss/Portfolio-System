@@ -21,7 +21,7 @@ Cloudflare ──► Caddy (/srv/proxy) ──► portfolio-web:80 (Nginx) ─�
 
 ## Setup kali pertama
 
-1. **Cloudflare**: tambah rekod A (proxied) untuk domain portfolio → IP VPS. Origin cert `*.byaiman.com` dah cover.
+1. **Cloudflare**: tambah rekod A (proxied) `portfolio` (`portfolio.byaiman.com`) → IP VPS. Origin cert `*.byaiman.com` dah cover.
 2. **Folder** (sebagai `aiman`):
    ```bash
    sudo mkdir -p /srv/portfolio/storage
@@ -45,7 +45,7 @@ Cloudflare ──► Caddy (/srv/proxy) ──► portfolio-web:80 (Nginx) ─�
    docker compose -f compose.production.yaml run --rm app php artisan migrate --force --seed
    docker compose -f compose.production.yaml up -d
    ```
-5. **Caddy**: tambah `PORTFOLIO_DOMAIN=…` dalam `/srv/proxy/.env`, dan blok ini dalam `/srv/proxy/Caddyfile`:
+5. **Caddy**: tambah `PORTFOLIO_DOMAIN=portfolio.byaiman.com` dalam `/srv/proxy/.env`, dan blok ini dalam `/srv/proxy/Caddyfile`:
    ```
    {$PORTFOLIO_DOMAIN} {
    	tls /certs/origin.pem /certs/origin.key
@@ -55,8 +55,7 @@ Cloudflare ──► Caddy (/srv/proxy) ──► portfolio-web:80 (Nginx) ─�
    }
    ```
    Kemudian `cd /srv/proxy && docker compose up -d`.
-   Kalau domain ialah `byaiman.com`, pastikan `compose.yaml` Caddy ada `PORTFOLIO_DOMAIN` dalam environment (atau `env_file: .env`).
-6. **Semak**: `curl -I https://<domain>/up` patut bagi 200, dan `docker ps` hanya tunjuk port 80/443 pada `proxy-caddy-1`.
+6. **Semak**: `curl -I https://portfolio.byaiman.com/up` patut bagi 200, dan `docker ps` hanya tunjuk port 80/443 pada `proxy-caddy-1`.
 
 ## Deploy seterusnya
 
