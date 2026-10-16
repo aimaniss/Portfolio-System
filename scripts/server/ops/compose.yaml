@@ -1,0 +1,62 @@
+# Monitoring for every system on the VPS. Copy to /srv/ops and run `docker compose up -d`.
+# Reachable only over Tailscale: both tools listen on 127.0.0.1 and `tailscale serve`
+# publishes them inside the tailnet (see DEPLOY.md). Nothing here is open to the internet.
+name: ops
+
+x-logging: &logging
+  logging:
+    driver: json-file
+    options: { max-size: "10m", max-file: "3" }
+
+services:
+  uptime-kuma:
+    <<: *logging
+    image: louislam/uptime-kuma:2
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3001:3001"
+    volumes:
+      - kuma:/app/data
+
+  # Full Docker control: keep it on 127.0.0.1 (Tailscale only), never behind a public domain.
+  portainer:
+    <<: *logging
+    image: portainer/portainer-ce:lts
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer:/data
+
+  netdata:
+    <<: *logging
+    image: netdata/netdata:stable
+    restart: unless-stopped
+    hostname: byaiman-vps
+    network_mode: host
+    pid: host
+    cap_add: [SYS_PTRACE, SYS_ADMIN]
+    security_opt: [apparmor:unconfined]
+    environment:
+      DO_NOT_TRACK: "1"
+    volumes:
+      - ./netdata.conf:/etc/netdata/netdata.conf:ro
+      - netdataconfig:/etc/netdata
+      - netdatalib:/var/lib/netdata
+      - netdatacache:/var/cache/netdata
+      - /:/host/root:ro,rslave
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /etc/os-release:/host/etc/os-release:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /var/log:/host/var/log:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+volumes:
+  kuma:
+  portainer:
+  netdataconfig:
+  netdatalib:
+  netdatacache:

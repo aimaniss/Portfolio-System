@@ -72,3 +72,23 @@ bash /srv/portfolio/app/scripts/deploy.sh
   `docker compose -f compose.production.yaml exec -T db sh -c 'mysqldump -u root -p"$MYSQL_ROOT_PASSWORD" portfolio' > backup.sql`
 - Log Laravel: `/srv/portfolio/storage/logs/`. Log container: `docker compose -f compose.production.yaml logs -f --tail 50 web app worker`.
 - Belum ada: auto-deploy GitHub Actions, backup automatik, monitor Uptime Kuma.
+
+## Ops: Uptime Kuma, Netdata, Portainer (Tailscale sahaja)
+
+Fail di `scripts/server/ops/` → salin ke `/srv/ops`, kemudian `docker compose up -d`.
+Ketiga-tiga panel hanya dengar di `127.0.0.1` dalam VPS; `tailscale serve` buka di dalam tailnet sahaja:
+
+| Panel | Dalam VPS | Melalui Tailscale |
+|-------|-----------|-------------------|
+| Uptime Kuma | `127.0.0.1:3001` | `https://byaiman-vps.<tailnet>.ts.net` |
+| Portainer | `127.0.0.1:9000` | `https://byaiman-vps.<tailnet>.ts.net:8443` |
+| Netdata | `127.0.0.1:19999` | `https://byaiman-vps.<tailnet>.ts.net:10000` |
+
+```bash
+tailscale serve --bg --https=443 http://127.0.0.1:3001
+tailscale serve --bg --https=8443 http://127.0.0.1:9000
+tailscale serve --bg --https=10000 http://127.0.0.1:19999
+```
+
+Setup kali pertama (folder, key `deploy`, Tailscale) ada dalam `scripts/server/setup-vps.sh`.
+Portainer: cipta akaun admin dalam 5 minit selepas start, kalau tidak ia kunci diri (`docker compose restart portainer`).
